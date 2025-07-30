@@ -13,7 +13,7 @@ export function ScrollContainer(props: ScrollContainerProps): JSX.Element {
     return (
         <Grid size={4} sx={{height: 600, overflow: "auto", scrollBehavior: "smooth", scrollbarWidth: "none"}}>
             {cards.length >> 0 ?
-                <Stack spacing={2} alignItems={"center"} padding={1} sx={{height: 600}}>
+                <Stack spacing={2} alignItems={"center"}>
                     {cards.map((card) => {
                         return <MultiActionAreaCard card={card}/>
                     })

@@ -1,6 +1,17 @@
 import {JSX, useState} from "react";
-import {Button, Card, CardActionArea, CardActions, CardContent, CardMedia, IconButton, Typography} from "@mui/material";
+import {
+    Button,
+    Card,
+    CardActionArea,
+    CardActions,
+    CardContent,
+    CardMedia,
+    Grid,
+    IconButton,
+    Typography
+} from "@mui/material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import CommentIcon from '@mui/icons-material/Comment';
 import {ActionCard} from "./SelectActionCard";
 import card1Image from "../static/images/card.png"
 
@@ -16,7 +27,7 @@ export default function MultiActionAreaCard(props: MultiActionAreaCardProp): JSX
             <CardActionArea>
                 <CardMedia
                     component={"img"}
-                    height={"140"}
+                    height={"240"}
                     image={card1Image}
                     alt={"green iguana"}
                 />
@@ -24,13 +35,23 @@ export default function MultiActionAreaCard(props: MultiActionAreaCardProp): JSX
                     <Typography gutterBottom variant={"h5"} component={"div"}>
                         {`${card.title}`}
                     </Typography>
-                    <Typography variant={"body2"} sx={{color: "text.secondary"}}>
+                    <Typography variant={"body2"} sx={{
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                        color: "text.secondary",
+                    }}>
                         {`${card.description}`}
                     </Typography>
                 </CardContent>
-                <IconButton aria-label={"like"}>
-                    <FavoriteIcon/>
-                </IconButton>
+                <Grid container padding={2}>
+                    <IconButton aria-label={"like"}>
+                        <FavoriteIcon/>
+                    </IconButton>
+                    <IconButton aria-label={"comment"}>
+                        <CommentIcon/>
+                    </IconButton>
+                </Grid>
             </CardActionArea>
             <CardActions>
                 <Button size={"small"} color={"primary"}></Button>

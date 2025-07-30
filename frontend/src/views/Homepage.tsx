@@ -15,6 +15,7 @@ import {JSX} from "react";
 import MultiActionAreaCard from "../components/MultiActionAreaCard";
 import SelectActionCards, {ActionCard} from "../components/SelectActionCard";
 import {ScrollContainer} from "../components/ScrollContainer";
+import SimpleMap from "../components/SimpleMap";
 
 
 export function ButtonAppBar(): JSX.Element {
@@ -96,11 +97,12 @@ export default function Homepage(): JSX.Element {
     return (
         <Box sx={{flexGrow: 1}}>
             <ButtonAppBar/>
-            <Grid container spacing={2} sx={{mb: 2}}>
+            <Grid container spacing={2} sx={{margin: 2}}>
                 {/* Top row with stack of cards and minimap */}
                 <ScrollContainer children={example_cards}/>
-                <Grid size={8}>
-                    <Card sx={{height: 600, boxSizing: 'border-box'}}>Mini Map</Card>
+                <Grid container sx={{maxHeight: 600, boxSizing: 'border-box', width: 950}}>
+                    {/*<Card >Mini Map</Card>*/}
+                    <SimpleMap/>
                 </Grid>
 
                 {/* Bottom row with 3 horizontal cards spanning full width */}
