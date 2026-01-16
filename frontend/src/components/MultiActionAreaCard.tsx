@@ -25,12 +25,12 @@ export default function MultiActionAreaCard(props: MultiActionAreaCardProp): JSX
     return (
         <Card sx={{height: 400, width: 345}}>
             <CardActionArea>
-                <CardMedia
-                    component={"img"}
-                    height={"240"}
-                    image={card1Image}
-                    alt={"green iguana"}
-                />
+                {/*<CardMedia*/}
+                {/*    component={"img"}*/}
+                {/*    height={"240"}*/}
+                {/*    image={card1Image}*/}
+                {/*    alt={"green iguana"}*/}
+                {/*/>*/}
                 <CardContent>
                     <Typography gutterBottom variant={"h5"} component={"div"}>
                         {`${card.title}`}

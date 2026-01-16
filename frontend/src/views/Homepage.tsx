@@ -46,32 +46,26 @@ const example_cards: ActionCard[] = [
     {
         id: 1,
         type: "location",
-        title: "Alidar Leaves Japan",
-        description: "After consuming copious amounts of alcohol, Alidar finally departs the kingdom of Japan and heads home"
+        title: "Kowloon, Hong Kong",
+        description: "Exchange Program Semester B @ City University of Hong Kong"
     },
     {
         id: 2,
         type: "location",
-        title: "Esther works",
-        description: "She workin"
+        title: "Sapporo, Japan",
+        description: "Dec 21st - Dec 26th"
     },
     {
         id: 3,
         type: "location",
-        title: "Owen works",
-        description: "He workin"
+        title: "Kyoto, Japan",
+        description: "Dec 27th - Dec 30th"
     },
     {
         id: 4,
         type: "location",
-        title: "Juki preps to leave for NYC",
-        description: "The era of JukiEats in Austin is coming to a close and a new chapter will begin in NYC this August"
-    },
-    {
-        id: 5,
-        type: "location",
-        title: "Tracy explores Australia",
-        description: "Rivaling Alidar's alcohol consumption, Tracky embarks on her first worldy experience in the great downunder"
+        title: "Tokyo, Japan",
+        description: "Dec 30th - Jan 4th"
     },
 ]
 
@@ -81,17 +75,17 @@ export default function Homepage(): JSX.Element {
         {
             id: 1,
             title: 'Location',
-            description: 'Where is the council?',
+            description: 'Traveling, Studying, and Work places',
         } as ActionCard,
         {
             id: 2,
             title: 'Food',
-            description: 'What is the council munchin',
+            description: 'Recent Eats',
         } as ActionCard,
         {
             id: 3,
-            title: 'Music',
-            description: 'See what the council has been listening to',
+            title: 'Cars',
+            description: 'Gallery',
         } as ActionCard,
     ];
     return (
