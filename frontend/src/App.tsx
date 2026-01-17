@@ -1,11 +1,14 @@
 import React from 'react';
 import './App.css';
-import Homepage from "./views/Homepage";
+import FullscreenViewer from "./components/Car3DBackgroundPage";
 
 function App() {
     return (
-        <div className="App">
-            <Homepage/>
+        // <div className="App">
+        //     <Homepage/>
+        // </div>
+        <div>
+            <FullscreenViewer/>
         </div>
     );
 }

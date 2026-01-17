@@ -90,20 +90,21 @@ export default function Homepage(): JSX.Element {
     ];
     return (
         <Box sx={{flexGrow: 1}}>
-            <ButtonAppBar/>
-            <Grid container spacing={2} sx={{margin: 2}}>
-                {/* Top row with stack of cards and minimap */}
-                <ScrollContainer children={example_cards}/>
-                <Grid container sx={{maxHeight: 600, boxSizing: 'border-box', width: 950}}>
-                    {/*<Card >Mini Map</Card>*/}
-                    <SimpleMap/>
-                </Grid>
+            {/*<ButtonAppBar/>*/}
+            {/*<Grid container spacing={2} sx={{margin: 2}}>*/}
+            {/*    /!* Top row with stack of cards and minimap *!/*/}
+            {/*    <ScrollContainer children={example_cards}/>*/}
+            {/*    <Grid container sx={{maxHeight: 600, boxSizing: 'border-box', width: 950}}>*/}
+            {/*        /!*<Card >Mini Map</Card>*!/*/}
+            {/*        <SimpleMap/>*/}
+            {/*    </Grid>*/}
 
-                {/* Bottom row with 3 horizontal cards spanning full width */}
-                <Grid size={12} sx={{display: 'flex', justifyContent: 'center'}}>
-                    <SelectActionCards cards={pageOptions}/>
-                </Grid>
-            </Grid>
+            {/*    /!* Bottom row with 3 horizontal cards spanning full width *!/*/}
+            {/*    <Grid size={12} sx={{display: 'flex', justifyContent: 'center'}}>*/}
+            {/*        <SelectActionCards cards={pageOptions}/>*/}
+            {/*    </Grid>*/}
+            {/*</Grid>*/}
+
         </Box>
     );
 }
