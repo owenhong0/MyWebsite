@@ -1,15 +1,18 @@
-import React from 'react';
-import { useGLTF } from '@react-three/drei';
+import { useGLTF } from "@react-three/drei";
 
-interface CarModelProps {
-  modelPath: string; // Explicitly define modelPath as a string
-}
-
-const CarModel: React.FC<CarModelProps> = ({ modelPath }) => {
-  // useGLTF returns a GLTF object; you may want to assert the type to avoid ambiguity.
-  const { scene } = useGLTF(modelPath) as any; // Type assertion to avoid errors
-
-  return <primitive object={scene} />;
+type CarProps = {
+  modelPath: string;
 };
 
-export default CarModel;
+export function CarModel({ modelPath }: CarProps) {
+  const { scene } = useGLTF(modelPath)
+
+  return (
+      <primitive
+          object={scene}
+          scale={1}
+          position={[-26,0.1, -10]}
+          rotation={[0, 45, 0]}
+      />
+  );
+}
