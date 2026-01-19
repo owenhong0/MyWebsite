@@ -11,7 +11,7 @@ export function CarModel({ modelPath }: CarProps) {
       <primitive
           object={scene}
           scale={1}
-          position={[-26,0.1, -10]}
+          position={[0,0,0]}
           rotation={[0, 45, 0]}
       />
   );

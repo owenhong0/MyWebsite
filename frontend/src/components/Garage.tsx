@@ -1,7 +1,7 @@
 import { useGLTF } from "@react-three/drei";
 
 export function Garage() {
-  const { scene } = useGLTF("/models/hangar.glb")
+  const { scene } = useGLTF("/models/showroom.glb")
 
   return (
       <primitive

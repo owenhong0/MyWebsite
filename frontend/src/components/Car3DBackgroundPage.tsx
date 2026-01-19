@@ -6,7 +6,7 @@ import { Garage } from './Garage';
 import {CarModel} from "./CarModel";
 
 const FullscreenViewer = () => {
-    const [selectedCar, setSelectedCar] = useState("/models/NSX.glb");
+    const [selectedCar, setSelectedCar] = useState("/models/1997_nissan_skyline_gt-r_r33.glb");
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);  // Explicitly typing state
     const [openMenu, setOpenMenu] = useState(false);
 
@@ -31,7 +31,7 @@ const FullscreenViewer = () => {
                 <OrbitControls/>
 
                 {/* Environment to simulate sunlight, etc. */}
-                <Environment preset="sunset"/>
+                <Environment preset="studio"/>
             </Canvas>
 
             {/* UI Controls */}
@@ -52,8 +52,8 @@ const FullscreenViewer = () => {
                         },
                     }}
                 >
-                    <MenuItem onClick={() => setSelectedCar('/models/nsx.glb')}>NSX-R</MenuItem>
-                    <MenuItem onClick={() => setSelectedCar('/models/2010_lexus_lfa.glb')}>LFA</MenuItem>
+                    <MenuItem onClick={() => setSelectedCar('/models/1997_nissan_skyline_gt-r_r33.glb')}>NSX-R</MenuItem>
+                    <MenuItem onClick={() => setSelectedCar('/models/2023_porsche_911_gt3_rs.glb')}>LFA</MenuItem>
                 </Menu>
 
                 {/* Title or other UI elements */}
