@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Canvas} from '@react-three/fiber';
 import {OrbitControls, Environment, useGLTF} from '@react-three/drei';
 import {Box, Container, Button, Menu, MenuItem, Typography} from '@mui/material';
-import { Garage } from './Garage';
+import {Garage} from './Garage';
 import {CarModel} from "./CarModel";
 
 const FullscreenViewer = () => {
@@ -22,16 +22,31 @@ const FullscreenViewer = () => {
 
     return (
         <Box sx={{height: '100vh', width: '100vw'}}>
-            <Canvas style={{height: '100%', width: '100%'}} camera={{position: [-36.261,2.7942,-15.3383], rotation: [90.559, 10, -90], fov: 50}}>
-                <Garage />
+            <Canvas style={{height: '100%', width: '100%'}}
+                    camera={{position: [-36.261, 2, -15.3383], rotation: [0, 0, 0], fov: 50}}>
+                <Garage/>
                 {/* Load the car model */}
                 <CarModel modelPath={selectedCar}/>
 
                 {/* OrbitControls for moving around the model */}
-                <OrbitControls/>
+                <OrbitControls
+                    minAzimuthAngle={-Math.PI / 4}  // -45 degrees
+                    maxAzimuthAngle={Math.PI / 4.1}   // 45 degrees
+                    minPolarAngle={0}     // 30 degrees up
+                    maxPolarAngle={Math.PI / 2}   // ~70 degrees down
+
+                    // Distance constraints
+                    minDistance={3}
+                    maxDistance={25}
+
+                    // Target point
+                    target={[0, 1, 0]}
+                    autoRotate={true}                     // Auto-spin
+                    autoRotateSpeed={0.5}   // Look at 1 meter above ground
+                />
 
                 {/* Environment to simulate sunlight, etc. */}
-                <Environment preset="studio"/>
+                {/*<Environment preset="studio"/>*/}
             </Canvas>
 
             {/* UI Controls */}
@@ -52,8 +67,11 @@ const FullscreenViewer = () => {
                         },
                     }}
                 >
-                    <MenuItem onClick={() => setSelectedCar('/models/1997_nissan_skyline_gt-r_r33.glb')}>NSX-R</MenuItem>
-                    <MenuItem onClick={() => setSelectedCar('/models/2023_porsche_911_gt3_rs.glb')}>LFA</MenuItem>
+                    <MenuItem
+                        onClick={() => setSelectedCar('/models/1997_nissan_skyline_gt-r_r33.glb')}>R33 Skyline</MenuItem>
+                    <MenuItem onClick={() => setSelectedCar('/models/2023_porsche_911_gt3_rs.glb')}>Porsche 911 GT3 RS</MenuItem>
+                    <MenuItem onClick={() => setSelectedCar('/models/2010-Koenigsegg-CCXR.glb')}>Koenigsegg CCXR</MenuItem>
+                    <MenuItem onClick={() => setSelectedCar('/models/NSX-R.glb')}>Honda NSX-R</MenuItem>
                 </Menu>
 
                 {/* Title or other UI elements */}
