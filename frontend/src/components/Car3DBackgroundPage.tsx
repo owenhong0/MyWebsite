@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Canvas} from '@react-three/fiber';
 import {OrbitControls, Environment, useGLTF} from '@react-three/drei';
-import {Box, Container, Button, Menu, MenuItem, Typography} from '@mui/material';
+import {Box, Container, Button, Menu, MenuItem, Typography, Grid, Stack, Fade} from '@mui/material';
 import {Garage} from './Garage';
 import {CarModel} from "./CarModel";
 
@@ -20,6 +20,25 @@ const FullscreenViewer = () => {
         setOpenMenu(false);
     };
 
+    const [isDragging, setIsDragging] = useState(false);
+    const [showUI, setShowUI] = useState(true);
+
+    useEffect(() => {
+        let timeoutId: NodeJS.Timeout;
+
+        if (isDragging) {
+            setShowUI(false); // Hide UI when dragging
+        } else {
+            // Show UI after 1 second of no dragging
+            timeoutId = setTimeout(() => {
+                setShowUI(true);
+            }, 3000);
+        }
+
+        return () => clearTimeout(timeoutId);
+    }, [isDragging]);
+
+
     return (
         <Box sx={{height: '100vh', width: '100vw'}}>
             <Canvas style={{height: '100%', width: '100%'}}
@@ -30,8 +49,10 @@ const FullscreenViewer = () => {
 
                 {/* OrbitControls for moving around the model */}
                 <OrbitControls
-                    minAzimuthAngle={-Math.PI / 4}  // -45 degrees
-                    maxAzimuthAngle={Math.PI / 4.1}   // 45 degrees
+                    onStart={() => setIsDragging(true)}
+                    onEnd={() => setIsDragging(false)}
+                    minAzimuthAngle={-Math.PI * (100 / 180)}  // -45 degrees
+                    maxAzimuthAngle={Math.PI * (100 / 180)}   // 45 degrees
                     minPolarAngle={0}     // 30 degrees up
                     maxPolarAngle={Math.PI / 2}   // ~70 degrees down
 
@@ -40,7 +61,7 @@ const FullscreenViewer = () => {
                     maxDistance={25}
 
                     // Target point
-                    target={[0, 1, 0]}
+                    target={[0, 4, 0]}
                     autoRotate={true}                     // Auto-spin
                     autoRotateSpeed={0.5}   // Look at 1 meter above ground
                 />
@@ -49,36 +70,57 @@ const FullscreenViewer = () => {
                 {/*<Environment preset="studio"/>*/}
             </Canvas>
 
-            {/* UI Controls */}
-            <Container sx={{position: 'absolute', top: 10, left: 10, zIndex: 10}}>
-                <Button variant="contained" color="primary" onClick={handleClickMenu}>
-                    Open Menu
-                </Button>
+            <Fade in={showUI} timeout={500}>
+                <Box>
+                    <Container maxWidth={false} sx={{
+                        width: "auto",
+                        height: "auto",
+                        position: 'absolute', top: 300, left: 350, zIndex: 100, alignItems: 'center',
+                        display: 'flex',
+                        justifyContent: 'center',
 
-                {/* Menu for selecting options */}
-                <Menu
-                    anchorEl={anchorEl}
-                    open={openMenu}
-                    onClose={handleCloseMenu}
-                    PaperProps={{
-                        sx: {
-                            maxHeight: 200,
-                            width: 200,
-                        },
-                    }}
-                >
-                    <MenuItem
-                        onClick={() => setSelectedCar('/models/1997_nissan_skyline_gt-r_r33.glb')}>R33 Skyline</MenuItem>
-                    <MenuItem onClick={() => setSelectedCar('/models/2023_porsche_911_gt3_rs.glb')}>Porsche 911 GT3 RS</MenuItem>
-                    <MenuItem onClick={() => setSelectedCar('/models/2010-Koenigsegg-CCXR.glb')}>Koenigsegg CCXR</MenuItem>
-                    <MenuItem onClick={() => setSelectedCar('/models/NSX-R.glb')}>Honda NSX-R</MenuItem>
-                </Menu>
+                    }}>
+                        <Stack direction="column" sx={{
+                            width: "20%",
+                            height: "40%",
+                            alignItems: "center",
+                        }} spacing={2}>
+                            <Button variant="text">Octane</Button>
+                            <Button variant="text">Locale</Button>
+                            <Button variant="text">Plates</Button>
+                            <Button variant="text">Peaks</Button>
+                        </Stack>
+                    </Container>
 
-                {/* Title or other UI elements */}
-                <Typography variant="h5" sx={{position: 'absolute', top: 50, left: 10}}>
-                    3D Car Viewer
-                </Typography>
-            </Container>
+                    {/* UI Controls */}
+                    <Container sx={{position: 'absolute', top: 10, left: 10, zIndex: 10}}>
+                        <Button variant="contained" color="primary" onClick={handleClickMenu}>
+                            Open Menu
+                        </Button>
+                        <Menu
+                            anchorEl={anchorEl}
+                            open={openMenu}
+                            onClose={handleCloseMenu}
+                            PaperProps={{
+                                sx: {
+                                    maxHeight: 200,
+                                    width: 200,
+                                },
+                            }}
+                        >
+                            <MenuItem
+                                onClick={() => setSelectedCar('/models/1997_nissan_skyline_gt-r_r33.glb')}>R33
+                                Skyline</MenuItem>
+                            <MenuItem onClick={() => setSelectedCar('/models/2023_porsche_911_gt3_rs.glb')}>Porsche 911
+                                GT3
+                                RS</MenuItem>
+                            <MenuItem onClick={() => setSelectedCar('/models/2010-Koenigsegg-CCXR.glb')}>Koenigsegg
+                                CCXR</MenuItem>
+                            <MenuItem onClick={() => setSelectedCar('/models/NSX-R.glb')}>Honda NSX-R</MenuItem>
+                        </Menu>
+                    </Container>
+                </Box>
+            </Fade>
         </Box>
     );
 };
