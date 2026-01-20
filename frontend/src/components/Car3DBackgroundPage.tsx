@@ -132,7 +132,7 @@ const FullscreenViewer = () => {
                             <MenuItem
                                 onClick={() => setSelectedCar('/models/1997_nissan_skyline_gt-r_r33.glb')}>R33
                                 Skyline</MenuItem>
-                            <MenuItem onClick={() => setSelectedCar('/models/2023_porsche_911_gt3_rs.glb')}>Porsche 911
+                            <MenuItem onClick={() => setSelectedCar('/models/2023_Porsche_GT3RS.glb')}>Porsche 911
                                 GT3
                                 RS</MenuItem>
                             <MenuItem onClick={() => setSelectedCar('/models/2010-Koenigsegg-CCXR.glb')}>Koenigsegg
