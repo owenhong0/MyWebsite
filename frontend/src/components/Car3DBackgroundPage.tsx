@@ -1,9 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {Canvas} from '@react-three/fiber';
 import {OrbitControls, Environment, useGLTF} from '@react-three/drei';
-import {Box, Container, Button, Menu, MenuItem, Typography, Grid, Stack, Fade} from '@mui/material';
+import {Box, Container, Button, Menu, MenuItem, Typography, Grid, Stack, Fade, Icon, IconButton} from '@mui/material';
 import {Garage} from './Garage';
 import {CarModel} from "./CarModel";
+import {ChevronRight} from '@mui/icons-material';
+import {Link} from 'react-router-dom';
 
 const FullscreenViewer = () => {
     const [selectedCar, setSelectedCar] = useState("/models/1997_nissan_skyline_gt-r_r33.glb");
@@ -69,6 +71,25 @@ const FullscreenViewer = () => {
                 {/* Environment to simulate sunlight, etc. */}
                 {/*<Environment preset="studio"/>*/}
             </Canvas>
+            <IconButton
+                component={Link}
+                to="/localeMain"
+                sx={{
+                    position: 'fixed',
+                    right: 0,
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    zIndex: 1000,
+                    color: 'white',
+                    opacity: 0,           // Hidden by default
+                    '&:hover': {
+                        opacity: 1,         // Show on hover
+                    },
+                    transition: 'opacity 0.3s ease',
+                }}
+            >
+                <ChevronRight fontSize='large'/>
+            </IconButton>
 
             <Fade in={showUI} timeout={500}>
                 <Box>
@@ -85,10 +106,10 @@ const FullscreenViewer = () => {
                             height: "40%",
                             alignItems: "center",
                         }} spacing={2}>
-                            <Button variant="text">Octane</Button>
-                            <Button variant="text">Locale</Button>
-                            <Button variant="text">Plates</Button>
-                            <Button variant="text">Peaks</Button>
+                            <Button component={Link} variant="text" to="/">Octane</Button>
+                            <Button component={Link} variant="text" to="/localeMain">Locale</Button>
+                            <Button component={Link} variant="text" to="/platesMain">Plates</Button>
+                            <Button component={Link} variant="text" to="/peaksMain">Peaks</Button>
                         </Stack>
                     </Container>
 
