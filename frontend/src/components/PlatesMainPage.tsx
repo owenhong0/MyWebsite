@@ -2,6 +2,7 @@ import React, {JSX} from "react";
 import {Container, IconButton, Typography} from "@mui/material";
 import {Link} from "react-router-dom";
 import {ChevronLeft, ChevronRight} from "@mui/icons-material";
+import PlatesTable from "./PlatesTable";
 
 export function PlatesMainPage(): JSX.Element {
     return (
@@ -9,6 +10,7 @@ export function PlatesMainPage(): JSX.Element {
             <Typography>
                 Plates Main Page
             </Typography>
+            {/*<PlatesTable/>*/}
             <IconButton
                 component={Link}
                 to="/peaksMain"

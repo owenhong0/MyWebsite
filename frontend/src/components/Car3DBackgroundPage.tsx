@@ -138,6 +138,7 @@ const FullscreenViewer = () => {
                             <MenuItem onClick={() => setSelectedCar('/models/2010-Koenigsegg-CCXR.glb')}>Koenigsegg
                                 CCXR</MenuItem>
                             <MenuItem onClick={() => setSelectedCar('/models/NSX-R.glb')}>Honda NSX-R</MenuItem>
+                            <MenuItem onClick={() => setSelectedCar('/models/mclaren_f1.glb')}>McLaren F1</MenuItem>
                         </Menu>
                     </Container>
                 </Box>
