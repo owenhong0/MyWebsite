@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from typing import List
 
@@ -7,6 +8,14 @@ from . import models, schemas
 # TEMP: remove after first Alembic migration
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "http://localhost:5173"],  # React/Vite ports
+    allow_credentials=True,
+    allow_methods=["*"],  # Handles OPTIONS automatically
+    allow_headers=["*"],
+)
 
 @app.post("/users/", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):

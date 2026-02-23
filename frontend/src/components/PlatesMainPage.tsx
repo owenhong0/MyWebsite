@@ -3,6 +3,7 @@ import {Container, IconButton, Typography} from "@mui/material";
 import {Link} from "react-router-dom";
 import {ChevronLeft, ChevronRight} from "@mui/icons-material";
 import PlatesTable from "./PlatesTable";
+import {UserForm} from "./UserForm";
 
 export function PlatesMainPage(): JSX.Element {
     return (
@@ -49,6 +50,7 @@ export function PlatesMainPage(): JSX.Element {
             >
                 <ChevronLeft fontSize='large'/>
             </IconButton>
+            <UserForm></UserForm>
         </Container>
     );
 }
