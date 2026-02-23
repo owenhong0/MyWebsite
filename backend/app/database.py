@@ -1,10 +1,13 @@
+import os
+
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-import os
-from dotenv import load_dotenv
 
-load_dotenv()
+# Only load .env for app runtime, not Alembic
+if "ALEMBIC_CONFIG" not in os.environ:
+    from dotenv import load_dotenv
+    load_dotenv()
 
 DATABASE_URL = "postgresql+psycopg2://user:password@localhost:5432/myWebsiteDB"
 

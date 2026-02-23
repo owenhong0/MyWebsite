@@ -1,10 +1,13 @@
 # Add these lines BEFORE the existing imports section
 import os
 import sys
+
+from app import models
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 # Replace the problematic import:
-from app.database import Base  # ← Remove "backend." prefix
+# from app.database import Base  # ← Remove "backend." prefix
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
@@ -25,7 +28,7 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-target_metadata = Base.metadata
+target_metadata = models.Base.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
