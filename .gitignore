@@ -1,7 +1,3 @@
 backend/venv
-.idea/
-*.iml
-datasources.xml
-.idea/datasources.xml
-.idea/dataSources.xml
-.idea/dataSources.ids
+/.idea/Council-Book.iml
+/.idea/misc.xml
