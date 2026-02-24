@@ -70,3 +70,87 @@ def get_car_info(car_id: int, db: Session = Depends(get_db)):
             "trim": car.variant.trim,
         }
     }
+
+
+# === BRANDS (you probably already have these) ===
+@app.post("/brands/", response_model=schemas.BrandResponse)
+async def create_brand(brand: schemas.BrandCreate, db: Session = Depends(get_db)):
+    db_brand = models.Brand(**brand.dict())
+    db.add(db_brand)
+    db.commit()
+    db.refresh(db_brand)
+    return db_brand
+
+
+@app.get("/brands/", response_model=schemas.BrandList)
+async def get_brands(db: Session = Depends(get_db), limit: int = 100):
+    brands = db.query(models.Brand).limit(limit).all()
+    return schemas.BrandList(brands=brands)
+
+
+# === MODELS ===
+@app.post("/brands/{brand_id}/models/", response_model=schemas.ModelResponse)
+async def create_model(
+        brand_id: int,
+        model: schemas.ModelCreate,
+        db: Session = Depends(get_db)
+):
+    # Verify brand exists
+    brand = db.query(models.Brand).filter(models.Brand.id == brand_id).first()
+    if not brand:
+        raise HTTPException(status_code=404, detail="Brand not found")
+
+    db_model = models.Model(**model.dict())
+    db.add(db_model)
+    db.commit()
+    db.refresh(db_model)
+    return db_model
+
+
+@app.get("/brands/{brand_id}/models/", response_model=schemas.ModelList)
+async def get_models(brand_id: int, db: Session = Depends(get_db), limit: int = 100):
+    models_list = db.query(models.Model).filter(models.Model.brand_id == brand_id).limit(limit).all()
+    return schemas.ModelList(models=models_list)
+
+
+# === VARIANTS ===
+@app.post("/models/{model_id}/variants/", response_model=schemas.VariantResponse)
+async def create_variant(
+        model_id: int,
+        variant: schemas.VariantCreate,
+        db: Session = Depends(get_db)
+):
+    # Verify model exists
+    model = db.query(models.Model).filter(models.Model.id == model_id).first()
+    if not model:
+        raise HTTPException(status_code=404, detail="Model not found")
+
+    db_variant = models.Variant(**variant.dict())
+    db.add(db_variant)
+    db.commit()
+    db.refresh(db_variant)
+    return db_variant
+
+
+@app.get("/models/{model_id}/variants/", response_model=schemas.VariantList)
+async def get_variants(model_id: int, db: Session = Depends(get_db), limit: int = 100):
+    variants = db.query(models.Variant).filter(models.Variant.model_id == model_id).limit(limit).all()
+    return schemas.VariantList(variants=variants)
+@app.post("/cars/", response_model=schemas.CarResponse)
+async def create_car(car: schemas.CarCreate, db: Session = Depends(get_db)):
+    db_car = models.Car(**car.dict())
+    db.add(db_car)
+    db.commit()
+    db.refresh(db_car)
+    return db_car  # ← All computed properties included!
+
+
+@app.get("/cars/", response_model=schemas.CarList)
+async def get_cars(db: Session = Depends(get_db), limit: int = 100):
+    cars = db.query(models.Car).options(
+        joinedload(models.Car.variant)
+        .joinedload(models.Variant.model)
+        .joinedload(models.Model.brand)
+    ).limit(limit).all()
+
+    return schemas.CarList(cars=cars)
