@@ -1,0 +1,12 @@
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+minversion = "7.0"
+addopts = "--strict-markers --strict-config"
+pythonpath = ["."]
+markers = [
+    "slow: marks tests as slow",
+    "serial: marks tests that can't run in parallel"
+]
