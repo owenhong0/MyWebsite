@@ -18,6 +18,12 @@ class User(UserBase):
         from_attributes = True
 
 # === REQUEST SCHEMAS (Frontend → Backend) ===
+class DishCreate(BaseModel):
+    name: str = Field(..., max_length=100, description="Dish name")
+    rating: Optional[float] = Field(None, ge=0, le=5, description="Average rating (0-5)")
+    description: Optional[str] = Field(None, max_length=500)
+    image_filenames: Optional[List[str]] = Field(None, max_items=10)
+    nationality_image_filenames: Optional[List[str]] = Field(None, max_items=5)
 
 class BrandCreate(BaseModel):
     name: str = Field(..., max_length=50)
@@ -47,6 +53,20 @@ class CarCreate(BaseModel):
 
 
 # === RESPONSE SCHEMAS (Backend → Frontend) ===
+class DishResponse(BaseModel):
+    id: int
+    name: str
+    rating: Optional[float]
+    description: Optional[str]
+    image_filenames: Optional[str]  # Keep as JSON string (matches DB)
+    nationality_image_filenames: Optional[str]  # Keep as JSON string (matches DB)
+
+    # Computed properties from your model
+    image_urls: List[str]
+    nationality_image_urls: List[str]
+
+    class Config:
+        from_attributes = True  # Converts SQLAlchemy model → Pydantic
 
 class BrandResponse(BaseModel):
     id: int
@@ -110,6 +130,9 @@ class CarResponse(BaseModel):
 
 
 # === LIST SCHEMAS ===
+class DishList(BaseModel):
+    dishes: List[DishResponse]
+
 class BrandList(BaseModel):
     brands: List[BrandResponse]
 

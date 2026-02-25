@@ -1,11 +1,12 @@
 import json
 import uuid
 
-from sqlalchemy import Column, Integer, String, ForeignKey, Text, Numeric, UUID
+from sqlalchemy import Column, Integer, String, ForeignKey, Text, Numeric, UUID, Float
 from sqlalchemy.orm import relationship
 from .s3_config import (
     CAR_GLBS_FOLDER, CAR_IMAGES_FOLDER, CAR_EMBLEMS_FOLDER,
-    get_car_glb_url, get_car_image_url, get_emblem_url, CDN_BASE_URL, BRAND_LOGOS_FOLDER
+    get_car_glb_url, get_car_image_url, get_emblem_url, CDN_BASE_URL, BRAND_LOGOS_FOLDER, DISHES_IMAGES_FOLDER,
+    DISHES_NATIONALITY_IMAGES_FOLDER
 )
 from .database import Base
 
@@ -15,6 +16,34 @@ class User(Base):
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     name = Column(String, nullable=False, index=True)
     email = Column(String, nullable=False, index=True, unique=True)
+
+class Dish(Base):
+    __tablename__ = "dishes"
+
+    id = Column(Integer, primary_key=True, autoincrement=True, index=True)
+    name = Column(String, nullable=False, index=True)
+    rating = Column(Float, nullable=True, index=True)
+    description = Column(String, nullable=True, index=True)
+
+    # S3 filenames
+    image_filenames = Column(Text)
+    nationality_image_filenames = Column(Text)
+
+    @property
+    def image_urls(self) -> list[str]:
+        try:
+            filenames = json.loads(self.image_filenames or "[]")
+            return [f"{CDN_BASE_URL}/{DISHES_IMAGES_FOLDER}{f}" for f in filenames]
+        except:
+            return []
+
+    @property
+    def nationality_image_urls(self) -> list[str]:
+        try:
+            filenames = json.loads(self.nationality_image_filenames or "[]")
+            return [f"{CDN_BASE_URL}/{DISHES_NATIONALITY_IMAGES_FOLDER}{f}" for f in filenames]
+        except:
+            return []
 
 
 class Brand(Base):

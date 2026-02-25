@@ -8,6 +8,8 @@ CAR_GLBS_FOLDER: Final[str] = "cars/glbs"
 CAR_IMAGES_FOLDER: Final[str] = "cars/images"
 CAR_EMBLEMS_FOLDER: Final[str] = "cars/emblems"
 BRAND_LOGOS_FOLDER: Final[str] = "brands/logos"
+DISHES_IMAGES_FOLDER: Final[str] = "dishes/images"
+DISHES_NATIONALITY_IMAGES_FOLDER: Final[str] = "dishes/nationality"
 
 # Base CDN URL
 CDN_BASE_URL = f"https://{AWS_BUCKET}.s3.{AWS_REGION}.amazonaws.com"

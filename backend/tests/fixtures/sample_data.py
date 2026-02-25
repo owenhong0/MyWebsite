@@ -1,6 +1,8 @@
 from app.models import Brand, Model, Variant, Car
 from sqlalchemy.orm import Session
 
+from app.models import Dish
+
 
 def create_sample_bmw_m3(db: Session):
     """Create complete BMW M3 hierarchy"""
@@ -35,3 +37,17 @@ def create_sample_bmw_m3(db: Session):
     db.commit()
 
     return car
+
+def create_sample_pad_thai(db: Session):
+    """Create complete Pad Thai dish with images"""
+    dish = Dish(
+        name="Pad Thai",
+        rating=4.5,
+        description="Classic Thai street food with rice noodles, shrimp, tofu, and peanuts",
+        image_filenames='["padthai1.jpg", "padthai2.jpg"]',
+        nationality_image_filenames='["thai-flag.png"]'
+    )
+    db.add(dish)
+    db.commit()
+    db.refresh(dish)
+    return dish

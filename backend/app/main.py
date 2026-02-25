@@ -8,6 +8,7 @@ from typing import List
 from .database import get_db, engine
 from . import models, schemas
 from .models import Car, Variant, Model
+from .schemas import DishList, DishResponse, DishCreate
 
 S3_BUCKET = os.environ.get("S3_BUCKET")
 
@@ -154,3 +155,16 @@ async def get_cars(db: Session = Depends(get_db), limit: int = 100):
     ).limit(limit).all()
 
     return schemas.CarList(cars=cars)
+
+@app.post("/dishes/", response_model=DishResponse)
+async def create_dish(dish: DishCreate, db: Session = Depends(get_db)):
+    db_dish = models.Dish(**dish.dict())
+    db.add(db_dish)
+    db.commit()
+    db.refresh(db_dish)
+    return db_dish
+
+@app.get("/dishes/", response_model=DishList)
+async def get_dishes(limit: int = 50, db: Session = Depends(get_db)):
+    dishes = db.query(models.Dish).limit(limit).all()
+    return schemas.DishList(dishes=dishes)

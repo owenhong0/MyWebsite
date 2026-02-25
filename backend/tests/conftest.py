@@ -1,5 +1,5 @@
 import pytest
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 from app.database import Base
 from app.models import *  # All your models
@@ -25,3 +25,9 @@ def db_session(engine):
         session.rollback()
     finally:
         session.close()
+
+@pytest.fixture(scope="function")
+def fresh_db(db_session):
+    """Guaranteed fresh DB per test"""
+    db_session.execute(text("DELETE FROM dishes"))  # Clear table
+    yield db_session
