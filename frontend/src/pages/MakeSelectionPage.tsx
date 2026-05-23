@@ -3,6 +3,7 @@ import { Box, Typography, IconButton } from '@mui/material';
 import { ArrowBack } from '@mui/icons-material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getCarsByMake, ALL_MAKES } from '../components/CarGallery/cars.config';
+import { CarThumbnail } from '../components/CarGallery/CarThumbnail';
 import DropdownNav from '../components/common/DropdownNav';
 
 export default function MakeSelectionPage() {
@@ -68,48 +69,34 @@ export default function MakeSelectionPage() {
               cursor:         'pointer',
               position:       'relative',
               aspectRatio:    '16 / 9',
-              background:     'rgba(255,255,255,0.03)',
+              background:     '#111',
               border:         '0.5px solid rgba(255,255,255,0.08)',
               display:        'flex',
               flexDirection:  'column',
               justifyContent: 'flex-end',
               padding:        '1.25rem',
               overflow:       'hidden',
-              transition:     'border-color 0.2s, background 0.2s',
+              transition:     'border-color 0.3s',
               '&:hover': {
-                borderColor: 'rgba(255,255,255,0.25)',
-                background:  'rgba(255,255,255,0.06)',
+                borderColor: 'rgba(255,255,255,0.3)',
               },
-              '&:hover .car-label': { color: 'rgba(255,255,255,0.92)' },
+              '&:hover .car-label': { color: '#fff' },
             }}
           >
-            {/* Car photo */}
-            <Box
-              component="img"
-              src={car.imageUrl}
-              alt={car.displayName}
-              sx={{
-                position:   'absolute',
-                inset:      0,
-                width:      '100%',
-                height:     '100%',
-                objectFit:  'cover',
-                objectPosition: 'center',
-                transition: 'transform 0.4s ease',
-                '.MuiBox-root:hover &': { transform: 'scale(1.03)' },
-              }}
-            />
+            {/* Live 3D thumbnail — FM4-style studio render, consistent across all cars */}
+            <CarThumbnail config={car} />
 
-            {/* Gradient overlay so text is readable over photo */}
+            {/* Gradient overlay — darker at bottom so label stays readable */}
             <Box sx={{
               position:   'absolute',
               inset:      0,
-              background: 'linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.1) 50%, transparent 100%)',
+              background: 'linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.15) 45%, transparent 100%)',
               pointerEvents: 'none',
+              zIndex:     1,
             }} />
 
             {/* Card label */}
-            <Box sx={{ position: 'relative', zIndex: 1 }}>
+            <Box sx={{ position: 'relative', zIndex: 2 }}>
               <Typography className="car-label" sx={{
                 fontSize:      '18px',
                 fontWeight:    300,
