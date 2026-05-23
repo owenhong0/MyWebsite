@@ -127,6 +127,11 @@ export default function MakeSelectionPage() {
   );
 }
 
+// ─── Shared constant: pixel height of the fixed MakeStrip ────────────────────
+// Used by sibling pages (Car3DBackgroundPage, IndividualCarPage) to clear the
+// strip when positioning their own bottom-anchored elements.
+export const STRIP_H = 68; // px — keep in sync with py below (2 × 22px + ~24px text)
+
 // ─── Reusable make emblem strip ───────────────────────────────────────────────
 export function MakeStrip({ activeMake }: { activeMake?: string }) {
   const navigate = useNavigate();
@@ -137,13 +142,13 @@ export function MakeStrip({ activeMake }: { activeMake?: string }) {
       bottom:         0,
       left:           0,
       right:          0,
+      height:         `${STRIP_H}px`,
       zIndex:         100,
       display:        'flex',
-      justifyContent: 'center',
-      gap:            0,
-      background:     'rgba(0,0,0,0.7)',
-      backdropFilter: 'blur(12px)',
-      borderTop:      '0.5px solid rgba(255,255,255,0.07)',
+      alignItems:     'center',
+      background:     'rgba(0,0,0,0.82)',
+      backdropFilter: 'blur(16px)',
+      borderTop:      '0.5px solid rgba(255,255,255,0.1)',
     }}>
       {ALL_MAKES.map((make) => {
         const isActive = make === activeMake;
@@ -153,22 +158,24 @@ export function MakeStrip({ activeMake }: { activeMake?: string }) {
             onClick={() => navigate(`/gallery/${make}`)}
             sx={{
               flex:           1,
-              textAlign:      'center',
-              py:             '14px',
+              height:         '100%',
+              display:        'flex',
+              alignItems:     'center',
+              justifyContent: 'center',
               cursor:         'pointer',
               borderRight:    '0.5px solid rgba(255,255,255,0.06)',
-              borderBottom:   isActive ? '2px solid rgba(255,255,255,0.7)' : '2px solid transparent',
-              transition:     'all 0.2s ease',
-              '&:hover':      { background: 'rgba(255,255,255,0.04)' },
+              borderBottom:   isActive ? '2px solid rgba(255,255,255,0.75)' : '2px solid transparent',
+              transition:     'background 0.2s',
+              '&:hover':      { background: 'rgba(255,255,255,0.05)' },
               '&:last-child': { borderRight: 'none' },
             }}
           >
             <Typography sx={{
-              fontSize:      '10px',
-              letterSpacing: '0.16em',
+              fontSize:      '11px',
+              letterSpacing: '0.2em',
               textTransform: 'uppercase',
-              color:         isActive ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.3)',
-              fontWeight:    isActive ? 500 : 400,
+              color:         isActive ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.32)',
+              fontWeight:    isActive ? 600 : 400,
               transition:    'color 0.2s',
             }}>
               {make}
