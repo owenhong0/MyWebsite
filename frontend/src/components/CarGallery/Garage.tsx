@@ -1,5 +1,5 @@
 import { useGLTF } from "@react-three/drei";
-import { DoubleSide, Light, Mesh, MeshStandardMaterial } from "three";
+import { DoubleSide, Light, Mesh, MeshStandardMaterial, Vector3 } from "three";
 import { useEffect } from "react";
 
 export function Garage() {
@@ -25,7 +25,7 @@ export function Garage() {
             // so the HDRI environment shows through behind it.
             const box = mesh.geometry.boundingBox;
             if (!box) mesh.geometry.computeBoundingBox();
-            const size = mesh.geometry.boundingBox!.getSize({ x: 0, y: 0, z: 0 } as any);
+            const size = mesh.geometry.boundingBox!.getSize(new Vector3());
             const isBackgroundPlane =
                 (size as any).x > 30 || (size as any).z > 30;   // large flat geometry
 

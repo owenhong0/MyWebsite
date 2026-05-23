@@ -1,55 +1,41 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// cars.config.ts
-// Single source of truth for every car in the gallery.
-//
-// normalizeScale: measured as 4.0 / longestBoundingBoxDimension so every car
-//   sits inside a ~4-unit cube regardless of Sketchfab export units.
-//   Raw bounding boxes (trimesh):
-//     mclaren_f1              X 8.498  Y 4.975  Z 18.740  → scale 0.2134
-//     NSX-R                   X 8.145  Y 4.708  Z 18.320  → scale 0.2183
-//     skyline_gt-r_r33        X 7.616  Y 5.051  Z 17.987  → scale 0.2224
-//     supra_rz                X 7.683  Y 4.967  Z 17.626  → scale 0.2269
-//     Porsche_GT3RS           X 7.960  Y 5.344  Z 17.943  → scale 0.2229
-//     Koenigsegg-CCXR         X 7.728  Y 4.231  Z 16.720  → scale 0.2392
-//
-// cameraPreset: positioned for the model's default Y-rotation of -30° so the
-//   "nose" faces roughly front-right; tweak per car for the best magazine angle.
-//
-// hdriPreset: drei Environment preset keyed by country:
-//   Japan → "dawn"  |  Italy → "sunset"  |  Germany → "city"
-//   UK    → "lobby" |  USA   → "warehouse"|  Sweden  → "forest"
+// cars.config.ts — single source of truth for the gallery
 // ─────────────────────────────────────────────────────────────────────────────
 
 export type EnvironmentPreset =
-  | 'apartment'
-  | 'city'
-  | 'dawn'
-  | 'forest'
-  | 'lobby'
-  | 'night'
-  | 'park'
-  | 'studio'
-  | 'sunset'
-  | 'warehouse';
+  | 'apartment' | 'city' | 'dawn' | 'forest' | 'lobby'
+  | 'night' | 'park' | 'studio' | 'sunset' | 'warehouse';
 
 export type CameraPreset = {
   position: [number, number, number];
-  target: [number, number, number];
+  target:   [number, number, number];
+};
+
+export type CarSpec = {
+  engine:      string;
+  power:       string;
+  torque:      string;
+  weight:      string;
+  topSpeed:    string;
+  zeroToSixty: string;
 };
 
 export type CarConfig = {
-  filename: string;
-  displayName: string;
-  make: string;
-  country: string;
-  year: number;
+  slug:           string;               // URL segment: /gallery/:make/:slug
+  filename:       string;
+  imageUrl:       string;               // hero photo for cards & detail page
+  displayName:    string;
+  make:           string;
+  country:        string;
+  year:           number;
   normalizeScale: number;
-  hdriPreset: EnvironmentPreset;
-  /** Best magazine-press angle for this specific car. */
-  cameraPreset: CameraPreset;
+  hdriPreset:     EnvironmentPreset;
+  cameraPreset:   CameraPreset;
+  specs:          CarSpec;
+  description:    string;
 };
 
-// ─── Country → HDRI mapping ───────────────────────────────────────────────────
+// ─── Country → HDRI preset ───────────────────────────────────────────────────
 export const COUNTRY_HDRI: Record<string, EnvironmentPreset> = {
   Japan:   'dawn',
   Italy:   'sunset',
@@ -59,78 +45,168 @@ export const COUNTRY_HDRI: Record<string, EnvironmentPreset> = {
   Sweden:  'forest',
 };
 
-// ─── Default gallery camera (studio overview, before a car is "entered") ─────
+// ─── Default gallery camera — low front-3/4, hood height ─────────────────────
 export const GALLERY_CAMERA: CameraPreset = {
-  position: [4.5, 2.4, 5.5],
-  target:   [0, 0.55, 0],
+  position: [4, 1.2, 7],
+  target:   [0, 0.8, 0],
 };
+
+// ─── All unique makes (for emblem nav) ────────────────────────────────────────
+export const ALL_MAKES = ['McLaren', 'Honda', 'Nissan', 'Toyota', 'Porsche', 'Koenigsegg'] as const;
 
 // ─── Per-car configurations ───────────────────────────────────────────────────
 export const CAR_CONFIGS: CarConfig[] = [
   {
+    slug:           'mclaren-f1',
     filename:       '/models/mclaren_f1-opt.glb',
+    imageUrl:       '/images/cars/mclaren-f1.jpg',
     displayName:    'McLaren F1',
     make:           'McLaren',
     country:        'UK',
     year:           1994,
     normalizeScale: 0.2134,
     hdriPreset:     'lobby',
-    // UK lobby — cool indoor show light; front-3/4 reveals the long nose
-    cameraPreset: { position: [4.5, 2.0, 5.2], target: [0, 0.55, 0] },
+    cameraPreset:   { position: [4.5, 1.0, 7.0], target: [0, 0.7, 0] },
+    specs: {
+      engine:      '6.1L BMW S70/2 V12',
+      power:       '627 hp',
+      torque:      '479 lb-ft',
+      weight:      '1,138 kg',
+      topSpeed:    '386 km/h',
+      zeroToSixty: '3.2 s',
+    },
+    description:
+      'The McLaren F1 redefined what a road car could be. Designed by Gordon Murray, ' +
+      'its central driving position, gold-lined engine bay, and naturally aspirated V12 ' +
+      'made it the fastest production car in the world for a decade. Every gram obsessed over, ' +
+      'every detail deliberate.',
   },
   {
+    slug:           'honda-nsx-r',
     filename:       '/models/NSX-R-opt.glb',
+    imageUrl:       '/images/cars/honda-nsx-r.jpg',
     displayName:    'Honda NSX-R',
     make:           'Honda',
     country:        'Japan',
     year:           1997,
     normalizeScale: 0.2183,
     hdriPreset:     'dawn',
-    // Low and dramatic — shows the flat mid-engine silhouette
-    cameraPreset: { position: [5.5, 1.5, 4.0], target: [0, 0.5, 0] },
+    cameraPreset:   { position: [5.0, 0.9, 6.5], target: [0, 0.6, 0] },
+    specs: {
+      engine:      '3.0L DOHC VTEC V6',
+      power:       '280 hp',
+      torque:      '210 lb-ft',
+      weight:      '1,230 kg',
+      topSpeed:    '270 km/h',
+      zeroToSixty: '5.5 s',
+    },
+    description:
+      'Developed with input from Ayrton Senna, the NSX-R strips away everything superfluous. ' +
+      'Titanium connecting rods, a hand-matched engine, and deleted sound deadening — ' +
+      'Honda\'s answer to Ferrari built with the precision of a watch.',
   },
   {
+    slug:           'nissan-skyline-r33',
     filename:       '/models/1997_nissan_skyline_gt-r_r33-opt.glb',
+    imageUrl:       '/images/cars/nissan-skyline-r33.jpg',
     displayName:    'Nissan Skyline GT-R R33',
     make:           'Nissan',
     country:        'Japan',
     year:           1997,
     normalizeScale: 0.2224,
     hdriPreset:     'dawn',
-    // Slightly elevated to show the iconic fender flares
-    cameraPreset: { position: [3.5, 2.3, 6.0], target: [0, 0.6, 0] },
+    cameraPreset:   { position: [3.5, 1.4, 7.0], target: [0, 0.8, 0] },
+    specs: {
+      engine:      '2.6L RB26DETT Twin-Turbo I6',
+      power:       '276 hp (stated)',
+      torque:      '260 lb-ft',
+      weight:      '1,570 kg',
+      topSpeed:    '250 km/h (limited)',
+      zeroToSixty: '5.4 s',
+    },
+    description:
+      'Officially rated at 276 hp by gentlemen\'s agreement, the R33 GT-R produced ' +
+      'significantly more in practice. Its ATTESA E-TS all-wheel drive and wide-body stance ' +
+      'made it a revelation on the Nürburgring — and a legend on every touge it ever touched.',
   },
   {
+    slug:           'toyota-supra-rz',
     filename:       '/models/1998_toyota_supra_rz-opt.glb',
+    imageUrl:       '/images/cars/toyota-supra-rz.jpg',
     displayName:    'Toyota Supra RZ',
     make:           'Toyota',
     country:        'Japan',
     year:           1998,
     normalizeScale: 0.2269,
     hdriPreset:     'dawn',
-    // Rear-3/4 to highlight the whale-tail and rear haunches
-    cameraPreset: { position: [-2.5, 2.0, 5.5], target: [0, 0.55, 0] },
+    cameraPreset:   { position: [-3.5, 1.2, 6.5], target: [0, 0.8, 0] },
+    specs: {
+      engine:      '3.0L 2JZ-GTE Twin-Turbo I6',
+      power:       '320 hp',
+      torque:      '315 lb-ft',
+      weight:      '1,570 kg',
+      topSpeed:    '250 km/h (limited)',
+      zeroToSixty: '5.1 s',
+    },
+    description:
+      'The 2JZ-GTE is arguably the most tuneable engine ever put in a production car. ' +
+      'The Supra RZ\'s balanced chassis, rear-wheel drive, and a motor that could handle ' +
+      'triple the stock power with supporting mods made it the definitive 1990s sports car.',
   },
   {
+    slug:           'porsche-gt3rs',
     filename:       '/models/2023_Porsche_GT3RS-opt.glb',
+    imageUrl:       '/images/cars/porsche-gt3rs.jpg',
     displayName:    'Porsche 911 GT3 RS',
     make:           'Porsche',
     country:        'Germany',
     year:           2023,
     normalizeScale: 0.2229,
     hdriPreset:     'city',
-    // Very low angle — GT3 RS is visually taller with its swan-neck wing
-    cameraPreset: { position: [4.5, 1.2, 4.5], target: [0, 0.45, 0] },
+    cameraPreset:   { position: [4.5, 0.9, 6.5], target: [0, 0.7, 0] },
+    specs: {
+      engine:      '4.0L Flat-Six NA',
+      power:       '518 hp',
+      torque:      '343 lb-ft',
+      weight:      '1,450 kg',
+      topSpeed:    '296 km/h',
+      zeroToSixty: '3.2 s',
+    },
+    description:
+      'The 992 GT3 RS is a motorsport homologation special wearing a DRS rear wing ' +
+      'and swan-neck mounts derived directly from the 911 RSR. Its naturally aspirated ' +
+      '4.0L screams to 9,000 rpm. This is Porsche\'s most extreme road car.',
   },
   {
+    slug:           'koenigsegg-ccxr',
     filename:       '/models/2010-Koenigsegg-CCXR-opt.glb',
+    imageUrl:       '/images/cars/koenigsegg-ccxr.jpg',
     displayName:    'Koenigsegg CCXR Edition',
     make:           'Koenigsegg',
     country:        'Sweden',
     year:           2010,
     normalizeScale: 0.2392,
     hdriPreset:     'forest',
-    // Ultra-low to emphasise the extreme wedge shape
-    cameraPreset: { position: [3.5, 1.0, 4.0], target: [0, 0.4, 0] },
+    cameraPreset:   { position: [3.5, 0.8, 6.0], target: [0, 0.6, 0] },
+    specs: {
+      engine:      '4.7L Twin-Supercharged V8 (E85)',
+      power:       '1,018 hp',
+      torque:      '811 lb-ft',
+      weight:      '1,180 kg',
+      topSpeed:    '402+ km/h',
+      zeroToSixty: '2.9 s',
+    },
+    description:
+      'Running on biofuel, the CCXR Edition produced over 1,000 hp from a hand-built ' +
+      'twin-supercharged V8. Only two were ever made. Koenigsegg built what the hypercar ' +
+      'world was still theorising — a carbon-bodied, ethanol-fuelled, sub-3-second machine ' +
+      'from a tiny workshop in Ängelholm.',
   },
 ];
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+export const getCarBySlug = (slug: string): CarConfig | undefined =>
+  CAR_CONFIGS.find((c) => c.slug === slug);
+
+export const getCarsByMake = (make: string): CarConfig[] =>
+  CAR_CONFIGS.filter((c) => c.make.toLowerCase() === make.toLowerCase());

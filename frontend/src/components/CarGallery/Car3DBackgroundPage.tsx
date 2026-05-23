@@ -8,6 +8,7 @@ import { Canvas, useThree } from '@react-three/fiber';
 import {
   ContactShadows,
   Environment,
+  MeshReflectorMaterial,
   OrbitControls,
 } from '@react-three/drei';
 import {
@@ -20,14 +21,13 @@ import {
   ArrowBackIos,
   ArrowForwardIos,
   ChevronRight,
-  OpenInFull,
   CloseFullscreen,
+  OpenInFull,
 } from '@mui/icons-material';
-import { Link } from 'react-router-dom';
-import { Garage } from './Garage';
+import { Link, useNavigate } from 'react-router-dom';
 import { CarModel } from './CarModel';
-import MainMenu from './MainMenu';
-import BrandSelectionMenu from './BrandSelectionMenu';
+import DropdownNav from '../common/DropdownNav';
+import { MakeStrip } from '../../pages/MakeSelectionPage';
 import {
   CAR_CONFIGS,
   GALLERY_CAMERA,
@@ -46,14 +46,11 @@ export type ViewState =
 
 // ─────────────────────────────────────────────────────────────────────────────
 // SceneLighting — FM4-style 3-point autoshow rig
-//   Key   : warm orange, front-left, high    (hard shadows)
-//   Fill  : cool blue,   front-right, low    (soft counter)
-//   Rim   : cool blue,   behind-right, tight (specular pop)
 // ─────────────────────────────────────────────────────────────────────────────
 function SceneLighting() {
   return (
     <>
-      {/* Key: warm, front-left, high */}
+      {/* Key: warm, front-left, high — primary shadow caster */}
       <directionalLight
         position={[-4, 8, 5]}
         intensity={1.8}
@@ -73,7 +70,7 @@ function SceneLighting() {
         intensity={0.6}
         color="#A0C0FF"
       />
-      {/* Rim: cool, behind-right, tight spot */}
+      {/* Rim: cool spot, behind-right, tight */}
       <spotLight
         position={[5, 7, -5]}
         intensity={2.5}
@@ -82,15 +79,46 @@ function SceneLighting() {
         penumbra={0.3}
         castShadow={false}
       />
-      {/* Ambient fill to avoid pure black undersides */}
       <ambientLight intensity={0.12} />
     </>
   );
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// CameraController — manages OrbitControls + preset camera repositioning.
-// Must live inside <Canvas> to access useThree.
+// ReflectorGround — Step 3: dark reflective plane for automotive press look
+// ─────────────────────────────────────────────────────────────────────────────
+function ReflectorGround() {
+  return (
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
+      <planeGeometry args={[40, 40]} />
+      <MeshReflectorMaterial
+        blur={[300, 100]}
+        resolution={512}
+        mixStrength={0.4}
+        mixBlur={8}
+        mirror={0.3}
+        color="#111111"
+        metalness={0.6}
+        roughness={1}
+      />
+    </mesh>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ShadowPlane — sits just above the reflector to cast ContactShadow correctly
+// ─────────────────────────────────────────────────────────────────────────────
+function ShadowPlane() {
+  return (
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.001, 0]} receiveShadow>
+      <planeGeometry args={[10, 10]} />
+      <shadowMaterial transparent opacity={0.35} />
+    </mesh>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CameraController — preset repositioning + OrbitControls
 // ─────────────────────────────────────────────────────────────────────────────
 interface CameraControllerProps {
   preset: CameraPreset;
@@ -112,7 +140,6 @@ function CameraController({
   const prevKey = useRef('');
 
   useEffect(() => {
-    // Only reposition when the preset actually changes
     const key = preset.position.join(',') + '|' + preset.target.join(',');
     if (key === prevKey.current) return;
     prevKey.current = key;
@@ -136,7 +163,6 @@ function CameraController({
       autoRotateSpeed={0.5}
       onStart={onDragStart}
       onEnd={onDragEnd}
-      // ── Existing constraints — do not change ──
       minAzimuthAngle={-Math.PI * (100 / 180)}
       maxAzimuthAngle={Math.PI * (100 / 180)}
       minPolarAngle={0}
@@ -157,7 +183,7 @@ const FullscreenViewer = () => {
   const [currentView, setCurrentView]       = useState<ViewState>('menu');
   const isDetailView = currentView === 'carSelection';
 
-  // ── UI visibility (existing drag-to-hide behaviour) ────────────────────────
+  // ── UI visibility (drag-to-hide) ───────────────────────────────────────────
   const [isDragging, setIsDragging] = useState(false);
   const [showUI, setShowUI]         = useState(true);
 
@@ -171,10 +197,7 @@ const FullscreenViewer = () => {
     return () => clearTimeout(id);
   }, [isDragging]);
 
-  // ── Task 2 — "Fake 2D" camera lock + idle cinematic pan ───────────────────
-  // On load: controls locked (looks like a still render).
-  // First mousemove: unlock.
-  // 4 s idle: re-enable the AFK auto-rotate.
+  // ── Fake-2D camera lock + idle cinematic pan ───────────────────────────────
   const [controlsEnabled, setControlsEnabled] = useState(false);
   const [autoRotate, setAutoRotate]            = useState(false);
   const hasInteracted = useRef(false);
@@ -197,28 +220,31 @@ const FullscreenViewer = () => {
     };
   }, []);
 
-  // ── Task 4 — Environment / HDRI state with crossfade overlay ──────────────
+  // ── HDRI crossfade ─────────────────────────────────────────────────────────
   const [envPreset, setEnvPreset] = useState<EnvironmentPreset>('studio');
   const [envFading, setEnvFading] = useState(false);
 
   const transitionEnv = useCallback((next: EnvironmentPreset) => {
-    setEnvFading(true);                      // fade to black
+    setEnvFading(true);
     setTimeout(() => {
       setEnvPreset(next);
-      setEnvFading(false);                   // fade back in
+      setEnvFading(false);
     }, 350);
   }, []);
 
-  // Sync env when the view mode or selected car changes
   useEffect(() => {
+    // In open-environment mode the car's HDRI is always active,
+    // whether in gallery or detail view. Studio is the fallback.
     transitionEnv(isDetailView ? selectedConfig.hdriPreset : 'studio');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDetailView, selectedConfig.filename]);
 
-  // ── Task 2d — camera preset: gallery overview OR per-car magazine angle ────
+  // ── Camera ────────────────────────────────────────────────────────────────
   const cameraPreset = isDetailView ? selectedConfig.cameraPreset : GALLERY_CAMERA;
 
-  // ── Car navigation (cycle through CAR_CONFIGS) ────────────────────────────
+  const navigate = useNavigate();
+
+  // ── Car navigation ────────────────────────────────────────────────────────
   const navigateCar = (dir: 1 | -1) => {
     const idx  = CAR_CONFIGS.indexOf(selectedConfig);
     const next = (idx + dir + CAR_CONFIGS.length) % CAR_CONFIGS.length;
@@ -227,66 +253,63 @@ const FullscreenViewer = () => {
 
   return (
     <Box sx={{
-      height: '100vh',
-      width: '100vw',
+      height:   '100vh',
+      width:    '100vw',
       position: 'relative',
       overflow: 'hidden',
       background: '#000',
     }}>
 
-      {/* ── Task 4b — HDRI crossfade black overlay ─────────────────────────── */}
+      {/* Top nav */}
+      <DropdownNav activeOverride="Gallery" />
+
+      {/* HDRI crossfade overlay */}
       <Box sx={{
-        position:       'absolute',
-        inset:          0,
-        zIndex:         5,
-        background:     '#000',
-        opacity:        envFading ? 1 : 0,
-        transition:     'opacity 0.35s ease',
-        pointerEvents:  'none',
+        position:      'absolute',
+        inset:         0,
+        zIndex:        5,
+        background:    '#000',
+        opacity:       envFading ? 1 : 0,
+        transition:    'opacity 0.35s ease',
+        pointerEvents: 'none',
       }} />
 
-      {/* ── Three.js Canvas ───────────────────────────────────────────────── */}
+      {/* ── Canvas ──────────────────────────────────────────────────────── */}
       <Canvas
         shadows
         style={{ height: '100%', width: '100%' }}
-        camera={{ position: [4.5, 2.4, 5.5], fov: 50 }}
+        camera={{ position: [4, 1.2, 7], fov: 50 }}
       >
-        {/* Task 3a — FM4 3-point lighting rig */}
+        {/* FM4 3-point rig */}
         <SceneLighting />
 
-        {/* Task 3b — Environment (studio for gallery; car-specific for detail) */}
-        {/* Task 4a/4c — controlled by envPreset state */}
+        {/* Step 2 — HDRI as actual visible background */}
         <Environment
           preset={envPreset}
           background
           backgroundBlurriness={0.04}
+          backgroundIntensity={0.8}
         />
 
-        {/* Showroom mesh (static) */}
-        <Garage />
+        {/* Step 3 — dark reflective ground plane */}
+        <ReflectorGround />
 
-        {/* Normalised car model */}
+        {/* Shadow-receiving plane just above the reflector */}
+        <ShadowPlane />
+
+        {/* Car model (auto-grounded in CarModel.tsx) */}
         <CarModel config={selectedConfig} />
 
-        {/* Task 3c — Contact shadow directly under the car; no grid floor */}
+        {/* Step 5 — single ContactShadows, everything else removed */}
         <ContactShadows
           position={[0, 0.001, 0]}
-          opacity={0.45}
-          scale={7}
+          opacity={0.5}
+          scale={10}
           blur={2.5}
-          far={1.5}
-          resolution={512}
+          far={4}
+          color="#000000"
         />
 
-        {/* Task 3d — Simple shadow-receiving plane under the car.
-            Replaces AccumulativeShadows which conflicted with the showroom floor.
-            shadowMaterial is transparent black so it composites cleanly. */}
-        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.001, 0]} receiveShadow>
-          <planeGeometry args={[10, 10]} />
-          <shadowMaterial transparent opacity={0.35} />
-        </mesh>
-
-        {/* Task 2 — camera with fake-2D lock and idle AFK pan */}
         <CameraController
           preset={cameraPreset}
           enabled={controlsEnabled}
@@ -296,26 +319,29 @@ const FullscreenViewer = () => {
         />
       </Canvas>
 
-      {/* ── Existing right-edge nav link ─────────────────────────────────── */}
+      {/* Existing right-edge nav */}
       <IconButton
         component={Link}
         to="/localeMain"
         sx={{
-          position:  'fixed',
-          right:     0,
-          top:       '50%',
-          transform: 'translateY(-50%)',
-          zIndex:    1000,
-          color:     'white',
-          opacity:   0,
-          '&:hover': { opacity: 1 },
+          position:   'fixed',
+          right:      0,
+          top:        '50%',
+          transform:  'translateY(-50%)',
+          zIndex:     1000,
+          color:      'white',
+          opacity:    0,
+          '&:hover':  { opacity: 1 },
           transition: 'opacity 0.3s ease',
         }}
       >
         <ChevronRight fontSize="large" />
       </IconButton>
 
-      {/* ── Car carousel prev / next — centred at the bottom ────────────── */}
+      {/* Make emblem strip — clicking navigates into that make's cars */}
+      <MakeStrip />
+
+      {/* ← → car cycle — centred at bottom */}
       <Fade in={showUI} timeout={400}>
         <Box sx={{
           position:  'absolute',
@@ -326,29 +352,19 @@ const FullscreenViewer = () => {
           gap:       '1rem',
           zIndex:    10,
         }}>
-          <IconButton
-            onClick={() => navigateCar(-1)}
-            sx={carNavBtnSx}
-            aria-label="Previous car"
-          >
+          <IconButton onClick={() => navigateCar(-1)} sx={navBtnSx} aria-label="Previous car">
             <ArrowBackIos fontSize="small" sx={{ color: 'white', ml: '4px' }} />
           </IconButton>
-          <IconButton
-            onClick={() => navigateCar(1)}
-            sx={carNavBtnSx}
-            aria-label="Next car"
-          >
+          <IconButton onClick={() => navigateCar(1)} sx={navBtnSx} aria-label="Next car">
             <ArrowForwardIos fontSize="small" sx={{ color: 'white' }} />
           </IconButton>
         </Box>
       </Fade>
 
-      {/* ── Detail-view toggle — pinned bottom-right, never overlaps ─────── */}
+      {/* Detail-view toggle — pinned bottom-right */}
       <Fade in={showUI} timeout={400}>
         <IconButton
-          onClick={() =>
-            setCurrentView(isDetailView ? 'menu' : 'carSelection')
-          }
+          onClick={() => setCurrentView(isDetailView ? 'menu' : 'carSelection')}
           sx={{
             position:       'absolute',
             right:          '1.5rem',
@@ -358,81 +374,60 @@ const FullscreenViewer = () => {
             backdropFilter: 'blur(8px)',
             border:         '0.5px solid rgba(255,255,255,0.15)',
             color:          'white',
-            '&:hover': { background: 'rgba(255,255,255,0.18)' },
+            '&:hover':      { background: 'rgba(255,255,255,0.18)' },
             transition:     'all 0.2s ease',
           }}
-          title={isDetailView ? 'Back to showroom' : 'Enter car detail view'}
+          title={isDetailView ? 'Back to studio' : 'Enter detail view'}
         >
-          {isDetailView
-            ? <CloseFullscreen fontSize="small" />
-            : <OpenInFull fontSize="small" />
-          }
+          {isDetailView ? <CloseFullscreen fontSize="small" /> : <OpenInFull fontSize="small" />}
         </IconButton>
       </Fade>
 
-      {/* ── Car nameplate — sits above the button row ────────────────────── */}
+      {/* Car nameplate */}
       <Box sx={{
         position:      'absolute',
         bottom:        '5.5rem',
         left:          '50%',
         transform:     'translateX(-50%)',
-        zIndex:        1000,
+        zIndex:        10,
         textAlign:     'center',
         pointerEvents: 'none',
         opacity:       showUI ? 1 : 0,
         transition:    'opacity 0.5s ease',
         userSelect:    'none',
       }}>
-        <Typography
-          variant="h5"
-          sx={{
-            color:         'rgba(255,255,255,0.92)',
-            fontWeight:    300,
-            letterSpacing: '0.18em',
-            textTransform: 'uppercase',
-            textShadow:    '0 2px 12px rgba(0,0,0,0.6)',
-          }}
-        >
+        <Typography variant="h5" sx={{
+          color:         'rgba(255,255,255,0.92)',
+          fontWeight:    300,
+          letterSpacing: '0.18em',
+          textTransform: 'uppercase',
+          textShadow:    '0 2px 12px rgba(0,0,0,0.6)',
+        }}>
           {selectedConfig.year}&nbsp;&nbsp;{selectedConfig.displayName}
         </Typography>
-        <Typography
-          variant="caption"
-          sx={{
-            color:         'rgba(255,255,255,0.45)',
-            letterSpacing: '0.14em',
-            textTransform: 'uppercase',
-            display:       'block',
-            mt:            '2px',
-          }}
-        >
+        <Typography variant="caption" sx={{
+          color:         'rgba(255,255,255,0.45)',
+          letterSpacing: '0.14em',
+          textTransform: 'uppercase',
+          display:       'block',
+          mt:            '2px',
+        }}>
           {selectedConfig.country}
-          {isDetailView
-            ? ` — ${selectedConfig.hdriPreset.toUpperCase()}`
-            : ' — STUDIO'}
+          {isDetailView ? ` — ${selectedConfig.hdriPreset.toUpperCase()}` : ' — STUDIO'}
         </Typography>
       </Box>
 
-      {/* ── Existing menu overlays ───────────────────────────────────────── */}
-      <Fade in={showUI} timeout={500}>
-        <Box>
-          {currentView === 'menu' && (
-            <MainMenu onViewChange={setCurrentView} />
-          )}
-          {currentView === 'brandSelection' && (
-            <BrandSelectionMenu onViewChange={setCurrentView} />
-          )}
-        </Box>
-      </Fade>
+      {/* Legacy menu overlays — kept for backward compat, hidden now routing handles navigation */}
     </Box>
   );
 };
 
-// ─── Shared style for the prev/next carousel buttons ─────────────────────────
-const carNavBtnSx = {
+// Shared style for prev/next buttons
+const navBtnSx = {
   background:     'rgba(255,255,255,0.08)',
   backdropFilter: 'blur(8px)',
   border:         '0.5px solid rgba(255,255,255,0.15)',
-  '&:hover': { background: 'rgba(255,255,255,0.18)' },
+  '&:hover':      { background: 'rgba(255,255,255,0.18)' },
   transition:     'all 0.2s ease',
 } as const;
 

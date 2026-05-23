@@ -1,0 +1,194 @@
+import React from 'react';
+import { Box, Typography, IconButton } from '@mui/material';
+import { ArrowBack } from '@mui/icons-material';
+import { useNavigate, useParams } from 'react-router-dom';
+import { getCarsByMake, ALL_MAKES } from '../components/CarGallery/cars.config';
+import DropdownNav from '../components/common/DropdownNav';
+
+export default function MakeSelectionPage() {
+  const navigate       = useNavigate();
+  const { make = '' }  = useParams<{ make: string }>();
+  const cars           = getCarsByMake(make);
+
+  // If the make has no cars, fall back to gallery
+  if (cars.length === 0) {
+    return (
+      <Box sx={{ background: '#0a0a0a', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Typography sx={{ color: 'rgba(255,255,255,0.4)' }}>No cars found for "{make}".</Typography>
+      </Box>
+    );
+  }
+
+  return (
+    <Box sx={{ minHeight: '100vh', background: '#0a0a0a', color: '#fff', position: 'relative' }}>
+      <DropdownNav activeOverride="Gallery" />
+
+      {/* Back */}
+      <IconButton
+        onClick={() => navigate('/gallery')}
+        sx={{ position: 'fixed', top: 60, left: 24, zIndex: 100, color: 'rgba(255,255,255,0.5)', '&:hover': { color: '#fff' } }}
+      >
+        <ArrowBack />
+      </IconButton>
+
+      {/* Make header */}
+      <Box sx={{ pt: '120px', pb: '3rem', px: '5vw' }}>
+        <Typography sx={{
+          fontSize:      '10px',
+          letterSpacing: '0.22em',
+          textTransform: 'uppercase',
+          color:         'rgba(255,255,255,0.3)',
+          mb:            '0.5rem',
+        }}>
+          Gallery / {make}
+        </Typography>
+        <Typography variant="h3" sx={{
+          fontWeight:    200,
+          letterSpacing: '0.08em',
+          textTransform: 'uppercase',
+          color:         'rgba(255,255,255,0.92)',
+        }}>
+          {make}
+        </Typography>
+      </Box>
+
+      {/* Car cards */}
+      <Box sx={{
+        display:             'grid',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+        gap:                 '1px',
+        px:                  '5vw',
+        pb:                  '4rem',
+      }}>
+        {cars.map((car) => (
+          <Box
+            key={car.slug}
+            onClick={() => navigate(`/gallery/${make}/${car.slug}`)}
+            sx={{
+              cursor:         'pointer',
+              position:       'relative',
+              aspectRatio:    '16 / 9',
+              background:     'rgba(255,255,255,0.03)',
+              border:         '0.5px solid rgba(255,255,255,0.08)',
+              display:        'flex',
+              flexDirection:  'column',
+              justifyContent: 'flex-end',
+              padding:        '1.25rem',
+              overflow:       'hidden',
+              transition:     'border-color 0.2s, background 0.2s',
+              '&:hover': {
+                borderColor: 'rgba(255,255,255,0.25)',
+                background:  'rgba(255,255,255,0.06)',
+              },
+              '&:hover .car-label': { color: 'rgba(255,255,255,0.92)' },
+            }}
+          >
+            {/* Car photo */}
+            <Box
+              component="img"
+              src={car.imageUrl}
+              alt={car.displayName}
+              sx={{
+                position:   'absolute',
+                inset:      0,
+                width:      '100%',
+                height:     '100%',
+                objectFit:  'cover',
+                objectPosition: 'center',
+                transition: 'transform 0.4s ease',
+                '.MuiBox-root:hover &': { transform: 'scale(1.03)' },
+              }}
+            />
+
+            {/* Gradient overlay so text is readable over photo */}
+            <Box sx={{
+              position:   'absolute',
+              inset:      0,
+              background: 'linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.1) 50%, transparent 100%)',
+              pointerEvents: 'none',
+            }} />
+
+            {/* Card label */}
+            <Box sx={{ position: 'relative', zIndex: 1 }}>
+              <Typography className="car-label" sx={{
+                fontSize:      '18px',
+                fontWeight:    300,
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                color:         'rgba(255,255,255,0.75)',
+                transition:    'color 0.2s',
+              }}>
+                {car.displayName}
+              </Typography>
+              <Typography sx={{
+                fontSize:      '11px',
+                letterSpacing: '0.14em',
+                color:         'rgba(255,255,255,0.3)',
+                textTransform: 'uppercase',
+                mt:            '2px',
+              }}>
+                {car.year} · {car.country}
+              </Typography>
+            </Box>
+          </Box>
+        ))}
+      </Box>
+
+      {/* All makes strip at bottom */}
+      <MakeStrip activeMake={make} />
+    </Box>
+  );
+}
+
+// ─── Reusable make emblem strip ───────────────────────────────────────────────
+export function MakeStrip({ activeMake }: { activeMake?: string }) {
+  const navigate = useNavigate();
+
+  return (
+    <Box sx={{
+      position:       'fixed',
+      bottom:         0,
+      left:           0,
+      right:          0,
+      zIndex:         100,
+      display:        'flex',
+      justifyContent: 'center',
+      gap:            0,
+      background:     'rgba(0,0,0,0.7)',
+      backdropFilter: 'blur(12px)',
+      borderTop:      '0.5px solid rgba(255,255,255,0.07)',
+    }}>
+      {ALL_MAKES.map((make) => {
+        const isActive = make === activeMake;
+        return (
+          <Box
+            key={make}
+            onClick={() => navigate(`/gallery/${make}`)}
+            sx={{
+              flex:           1,
+              textAlign:      'center',
+              py:             '14px',
+              cursor:         'pointer',
+              borderRight:    '0.5px solid rgba(255,255,255,0.06)',
+              borderBottom:   isActive ? '2px solid rgba(255,255,255,0.7)' : '2px solid transparent',
+              transition:     'all 0.2s ease',
+              '&:hover':      { background: 'rgba(255,255,255,0.04)' },
+              '&:last-child': { borderRight: 'none' },
+            }}
+          >
+            <Typography sx={{
+              fontSize:      '10px',
+              letterSpacing: '0.16em',
+              textTransform: 'uppercase',
+              color:         isActive ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.3)',
+              fontWeight:    isActive ? 500 : 400,
+              transition:    'color 0.2s',
+            }}>
+              {make}
+            </Typography>
+          </Box>
+        );
+      })}
+    </Box>
+  );
+}
