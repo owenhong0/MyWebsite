@@ -5,6 +5,8 @@ import { CAR_CONFIGS, type CarConfig } from './cars.config';
 
 type CarProps = {
   config: CarConfig;
+  /** Override the default -30° (front-3/4) Y-rotation. Pass e.g. Math.PI/2 for a side profile. */
+  yRotation?: number;
 };
 
 /**
@@ -12,17 +14,16 @@ type CarProps = {
  * so the lowest vertex sits exactly at y=0 regardless of how the exporter
  * positioned the mesh origin.
  *
- * Y-rotation -π/6 (-30°) gives a slight front-3/4 offset that pairs with
- * the magazine-angle cameraPresets defined in cars.config.ts.
+ * Default Y-rotation -π/6 (-30°) gives a slight front-3/4 offset.
+ * Pass `yRotation` to override (e.g. for side-profile thumbnails).
  */
-export function CarModel({ config }: CarProps) {
+export function CarModel({ config, yRotation = -Math.PI / 6 }: CarProps) {
   const { scene } = useGLTF(config.filename);
 
-  // Step 4 — push the model up so its lowest point is flush with y=0
   useEffect(() => {
     if (!scene) return;
     const box = new Box3().setFromObject(scene);
-    const groundOffset = box.min.y;      // negative if origin is above floor
+    const groundOffset = box.min.y;
     scene.position.y = -groundOffset;
   }, [scene, config.filename]);
 
@@ -31,7 +32,7 @@ export function CarModel({ config }: CarProps) {
       object={scene}
       scale={config.normalizeScale}
       position={[0, 0, 0]}
-      rotation={[0, -Math.PI / 6, 0]}
+      rotation={[0, yRotation, 0]}
     />
   );
 }

@@ -53,66 +53,63 @@ export default function MakeSelectionPage() {
         </Typography>
       </Box>
 
-      {/* Car cards */}
+      {/* Car cards — Porsche-website style: light background, side-profile 3D render */}
       <Box sx={{
         display:             'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-        gap:                 '1px',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))',
+        gap:                 '16px',
         px:                  '5vw',
-        pb:                  '4rem',
+        pb:                  `calc(${STRIP_H}px + 2rem)`,
       }}>
         {cars.map((car) => (
           <Box
             key={car.slug}
             onClick={() => navigate(`/gallery/${make}/${car.slug}`)}
             sx={{
-              cursor:         'pointer',
-              position:       'relative',
-              aspectRatio:    '16 / 9',
-              background:     '#111',
-              border:         '0.5px solid rgba(255,255,255,0.08)',
-              display:        'flex',
-              flexDirection:  'column',
-              justifyContent: 'flex-end',
-              padding:        '1.25rem',
-              overflow:       'hidden',
-              transition:     'border-color 0.3s',
+              cursor:       'pointer',
+              background:   '#f4f4f4',
+              border:       '1px solid rgba(0,0,0,0.07)',
+              borderRadius: '2px',
+              overflow:     'hidden',
+              transition:   'box-shadow 0.25s ease, transform 0.25s ease',
               '&:hover': {
-                borderColor: 'rgba(255,255,255,0.3)',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.13)',
+                transform: 'translateY(-2px)',
               },
-              '&:hover .car-label': { color: '#fff' },
+              '&:hover .car-name': { color: '#000' },
             }}
           >
-            {/* Live 3D thumbnail — FM4-style studio render, consistent across all cars */}
-            <CarThumbnail config={car} />
+            {/* 3D render area — car floats on card's light background */}
+            <Box sx={{ position: 'relative', aspectRatio: '16 / 9', overflow: 'hidden' }}>
+              <CarThumbnail config={car} />
+            </Box>
 
-            {/* Gradient overlay — darker at bottom so label stays readable */}
+            {/* Card footer — Porsche-style model info */}
             <Box sx={{
-              position:   'absolute',
-              inset:      0,
-              background: 'linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.15) 45%, transparent 100%)',
-              pointerEvents: 'none',
-              zIndex:     1,
-            }} />
-
-            {/* Card label */}
-            <Box sx={{ position: 'relative', zIndex: 2 }}>
-              <Typography className="car-label" sx={{
-                fontSize:      '18px',
-                fontWeight:    300,
-                letterSpacing: '0.1em',
-                textTransform: 'uppercase',
-                color:         'rgba(255,255,255,0.75)',
-                transition:    'color 0.2s',
-              }}>
+              px:         '1.4rem',
+              pt:         '1rem',
+              pb:         '1.25rem',
+              borderTop:  '1px solid rgba(0,0,0,0.06)',
+              background: '#ffffff',
+            }}>
+              <Typography
+                className="car-name"
+                sx={{
+                  fontSize:      '15px',
+                  fontWeight:    500,
+                  letterSpacing: '0.02em',
+                  color:         'rgba(0,0,0,0.82)',
+                  transition:    'color 0.2s',
+                  mb:            '3px',
+                }}
+              >
                 {car.displayName}
               </Typography>
               <Typography sx={{
                 fontSize:      '11px',
-                letterSpacing: '0.14em',
-                color:         'rgba(255,255,255,0.3)',
+                letterSpacing: '0.08em',
+                color:         'rgba(0,0,0,0.38)',
                 textTransform: 'uppercase',
-                mt:            '2px',
               }}>
                 {car.year} · {car.country}
               </Typography>
