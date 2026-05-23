@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import FullscreenViewer from "./components/Car3DBackgroundPage";
+import FullscreenViewer from "./components/CarGallery/Car3DBackgroundPage";
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 import PeaksMainPage from "./components/PeaksMainPage";
 import LocaleMainPage from "./components/LocaleMainPage";
