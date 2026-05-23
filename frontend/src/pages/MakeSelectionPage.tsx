@@ -3,7 +3,6 @@ import { Box, Typography, IconButton } from '@mui/material';
 import { ArrowBack } from '@mui/icons-material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getCarsByMake, ALL_MAKES } from '../components/CarGallery/cars.config';
-import { CarThumbnail } from '../components/CarGallery/CarThumbnail';
 import DropdownNav from '../components/common/DropdownNav';
 
 export default function MakeSelectionPage() {
@@ -64,6 +63,7 @@ export default function MakeSelectionPage() {
         {cars.map((car) => (
           <Box
             key={car.slug}
+            className="card-root"
             onClick={() => navigate(`/gallery/${make}/${car.slug}`)}
             sx={{
               cursor:       'pointer',
@@ -73,22 +73,35 @@ export default function MakeSelectionPage() {
               overflow:     'hidden',
               transition:   'box-shadow 0.25s ease, transform 0.25s ease',
               '&:hover': {
-                boxShadow: '0 8px 32px rgba(0,0,0,0.13)',
-                transform: 'translateY(-2px)',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.16)',
+                transform: 'translateY(-3px)',
               },
               '&:hover .car-name': { color: '#000' },
             }}
           >
-            {/* 3D render area — car floats on card's light background */}
-            <Box sx={{ position: 'relative', aspectRatio: '16 / 9', overflow: 'hidden' }}>
-              <CarThumbnail config={car} />
+            {/* Photo — fills card face, crops to 16:9 */}
+            <Box sx={{ position: 'relative', aspectRatio: '16 / 9', overflow: 'hidden', background: '#e8e8e8' }}>
+              <Box
+                component="img"
+                src={car.imageUrl}
+                alt={car.displayName}
+                sx={{
+                  width:          '100%',
+                  height:         '100%',
+                  objectFit:      'cover',
+                  objectPosition: 'center 38%',
+                  display:        'block',
+                  transition:     'transform 0.5s ease',
+                  '.card-root:hover &': { transform: 'scale(1.03)' },
+                }}
+              />
             </Box>
 
-            {/* Card footer — Porsche-style model info */}
+            {/* Footer — Porsche-style: white strip, name + meta */}
             <Box sx={{
               px:         '1.4rem',
-              pt:         '1rem',
-              pb:         '1.25rem',
+              pt:         '0.9rem',
+              pb:         '1.1rem',
               borderTop:  '1px solid rgba(0,0,0,0.06)',
               background: '#ffffff',
             }}>
@@ -97,8 +110,8 @@ export default function MakeSelectionPage() {
                 sx={{
                   fontSize:      '15px',
                   fontWeight:    500,
-                  letterSpacing: '0.02em',
-                  color:         'rgba(0,0,0,0.82)',
+                  letterSpacing: '0.01em',
+                  color:         'rgba(0,0,0,0.85)',
                   transition:    'color 0.2s',
                   mb:            '3px',
                 }}
@@ -107,7 +120,7 @@ export default function MakeSelectionPage() {
               </Typography>
               <Typography sx={{
                 fontSize:      '11px',
-                letterSpacing: '0.08em',
+                letterSpacing: '0.07em',
                 color:         'rgba(0,0,0,0.38)',
                 textTransform: 'uppercase',
               }}>
