@@ -27,7 +27,7 @@ import {
 import { Link, useNavigate } from 'react-router-dom';
 import { CarModel } from './CarModel';
 import DropdownNav from '../common/DropdownNav';
-import { MakeStrip } from '../../pages/MakeSelectionPage';
+import { MakeStrip, STRIP_H } from '../../pages/MakeSelectionPage';
 import {
   CAR_CONFIGS,
   GALLERY_CAMERA,
@@ -341,11 +341,11 @@ const FullscreenViewer = () => {
       {/* Make emblem strip — clicking navigates into that make's cars */}
       <MakeStrip />
 
-      {/* ← → car cycle — centred at bottom */}
+      {/* ← → car cycle — centred above the make strip */}
       <Fade in={showUI} timeout={400}>
         <Box sx={{
           position:  'absolute',
-          bottom:    '2rem',
+          bottom:    `calc(${STRIP_H}px + 1.25rem)`,
           left:      '50%',
           transform: 'translateX(-50%)',
           display:   'flex',
@@ -361,14 +361,14 @@ const FullscreenViewer = () => {
         </Box>
       </Fade>
 
-      {/* Detail-view toggle — pinned bottom-right */}
+      {/* Detail-view toggle — pinned above make strip, bottom-right */}
       <Fade in={showUI} timeout={400}>
         <IconButton
           onClick={() => setCurrentView(isDetailView ? 'menu' : 'carSelection')}
           sx={{
             position:       'absolute',
             right:          '1.5rem',
-            bottom:         '2rem',
+            bottom:         `calc(${STRIP_H}px + 1.25rem)`,
             zIndex:         10,
             background:     'rgba(255,255,255,0.08)',
             backdropFilter: 'blur(8px)',
@@ -386,7 +386,7 @@ const FullscreenViewer = () => {
       {/* Car nameplate */}
       <Box sx={{
         position:      'absolute',
-        bottom:        '5.5rem',
+        bottom:        `calc(${STRIP_H}px + 5rem)`,
         left:          '50%',
         transform:     'translateX(-50%)',
         zIndex:        10,

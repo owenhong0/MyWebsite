@@ -52,80 +52,77 @@ export default function MakeSelectionPage() {
         </Typography>
       </Box>
 
-      {/* Car cards */}
+      {/* Car cards — Porsche-website style: light background, side-profile 3D render */}
       <Box sx={{
         display:             'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-        gap:                 '1px',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))',
+        gap:                 '16px',
         px:                  '5vw',
-        pb:                  '4rem',
+        pb:                  `calc(${STRIP_H}px + 2rem)`,
       }}>
         {cars.map((car) => (
           <Box
             key={car.slug}
+            className="card-root"
             onClick={() => navigate(`/gallery/${make}/${car.slug}`)}
             sx={{
-              cursor:         'pointer',
-              position:       'relative',
-              aspectRatio:    '16 / 9',
-              background:     'rgba(255,255,255,0.03)',
-              border:         '0.5px solid rgba(255,255,255,0.08)',
-              display:        'flex',
-              flexDirection:  'column',
-              justifyContent: 'flex-end',
-              padding:        '1.25rem',
-              overflow:       'hidden',
-              transition:     'border-color 0.2s, background 0.2s',
+              cursor:       'pointer',
+              background:   '#f4f4f4',
+              border:       '1px solid rgba(0,0,0,0.07)',
+              borderRadius: '2px',
+              overflow:     'hidden',
+              transition:   'box-shadow 0.25s ease, transform 0.25s ease',
               '&:hover': {
-                borderColor: 'rgba(255,255,255,0.25)',
-                background:  'rgba(255,255,255,0.06)',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.16)',
+                transform: 'translateY(-3px)',
               },
-              '&:hover .car-label': { color: 'rgba(255,255,255,0.92)' },
+              '&:hover .car-name': { color: '#000' },
             }}
           >
-            {/* Car photo */}
-            <Box
-              component="img"
-              src={car.imageUrl}
-              alt={car.displayName}
-              sx={{
-                position:   'absolute',
-                inset:      0,
-                width:      '100%',
-                height:     '100%',
-                objectFit:  'cover',
-                objectPosition: 'center',
-                transition: 'transform 0.4s ease',
-                '.MuiBox-root:hover &': { transform: 'scale(1.03)' },
-              }}
-            />
+            {/* Photo — fills card face, crops to 16:9 */}
+            <Box sx={{ position: 'relative', aspectRatio: '16 / 9', overflow: 'hidden', background: '#e8e8e8' }}>
+              <Box
+                component="img"
+                src={car.imageUrl}
+                alt={car.displayName}
+                sx={{
+                  width:          '100%',
+                  height:         '100%',
+                  objectFit:      'cover',
+                  objectPosition: 'center 38%',
+                  display:        'block',
+                  transition:     'transform 0.5s ease',
+                  '.card-root:hover &': { transform: 'scale(1.03)' },
+                }}
+              />
+            </Box>
 
-            {/* Gradient overlay so text is readable over photo */}
+            {/* Footer — Porsche-style: white strip, name + meta */}
             <Box sx={{
-              position:   'absolute',
-              inset:      0,
-              background: 'linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.1) 50%, transparent 100%)',
-              pointerEvents: 'none',
-            }} />
-
-            {/* Card label */}
-            <Box sx={{ position: 'relative', zIndex: 1 }}>
-              <Typography className="car-label" sx={{
-                fontSize:      '18px',
-                fontWeight:    300,
-                letterSpacing: '0.1em',
-                textTransform: 'uppercase',
-                color:         'rgba(255,255,255,0.75)',
-                transition:    'color 0.2s',
-              }}>
+              px:         '1.4rem',
+              pt:         '0.9rem',
+              pb:         '1.1rem',
+              borderTop:  '1px solid rgba(0,0,0,0.06)',
+              background: '#ffffff',
+            }}>
+              <Typography
+                className="car-name"
+                sx={{
+                  fontSize:      '15px',
+                  fontWeight:    500,
+                  letterSpacing: '0.01em',
+                  color:         'rgba(0,0,0,0.85)',
+                  transition:    'color 0.2s',
+                  mb:            '3px',
+                }}
+              >
                 {car.displayName}
               </Typography>
               <Typography sx={{
                 fontSize:      '11px',
-                letterSpacing: '0.14em',
-                color:         'rgba(255,255,255,0.3)',
+                letterSpacing: '0.07em',
+                color:         'rgba(0,0,0,0.38)',
                 textTransform: 'uppercase',
-                mt:            '2px',
               }}>
                 {car.year} · {car.country}
               </Typography>
@@ -140,6 +137,11 @@ export default function MakeSelectionPage() {
   );
 }
 
+// ─── Shared constant: pixel height of the fixed MakeStrip ────────────────────
+// Used by sibling pages (Car3DBackgroundPage, IndividualCarPage) to clear the
+// strip when positioning their own bottom-anchored elements.
+export const STRIP_H = 68; // px — keep in sync with py below (2 × 22px + ~24px text)
+
 // ─── Reusable make emblem strip ───────────────────────────────────────────────
 export function MakeStrip({ activeMake }: { activeMake?: string }) {
   const navigate = useNavigate();
@@ -150,13 +152,13 @@ export function MakeStrip({ activeMake }: { activeMake?: string }) {
       bottom:         0,
       left:           0,
       right:          0,
+      height:         `${STRIP_H}px`,
       zIndex:         100,
       display:        'flex',
-      justifyContent: 'center',
-      gap:            0,
-      background:     'rgba(0,0,0,0.7)',
-      backdropFilter: 'blur(12px)',
-      borderTop:      '0.5px solid rgba(255,255,255,0.07)',
+      alignItems:     'center',
+      background:     'rgba(0,0,0,0.82)',
+      backdropFilter: 'blur(16px)',
+      borderTop:      '0.5px solid rgba(255,255,255,0.1)',
     }}>
       {ALL_MAKES.map((make) => {
         const isActive = make === activeMake;
@@ -166,22 +168,24 @@ export function MakeStrip({ activeMake }: { activeMake?: string }) {
             onClick={() => navigate(`/gallery/${make}`)}
             sx={{
               flex:           1,
-              textAlign:      'center',
-              py:             '14px',
+              height:         '100%',
+              display:        'flex',
+              alignItems:     'center',
+              justifyContent: 'center',
               cursor:         'pointer',
               borderRight:    '0.5px solid rgba(255,255,255,0.06)',
-              borderBottom:   isActive ? '2px solid rgba(255,255,255,0.7)' : '2px solid transparent',
-              transition:     'all 0.2s ease',
-              '&:hover':      { background: 'rgba(255,255,255,0.04)' },
+              borderBottom:   isActive ? '2px solid rgba(255,255,255,0.75)' : '2px solid transparent',
+              transition:     'background 0.2s',
+              '&:hover':      { background: 'rgba(255,255,255,0.05)' },
               '&:last-child': { borderRight: 'none' },
             }}
           >
             <Typography sx={{
-              fontSize:      '10px',
-              letterSpacing: '0.16em',
+              fontSize:      '11px',
+              letterSpacing: '0.2em',
               textTransform: 'uppercase',
-              color:         isActive ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.3)',
-              fontWeight:    isActive ? 500 : 400,
+              color:         isActive ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.32)',
+              fontWeight:    isActive ? 600 : 400,
               transition:    'color 0.2s',
             }}>
               {make}
