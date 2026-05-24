@@ -88,7 +88,7 @@ export const CAR_CONFIGS: CarConfig[] = [
     slug:               'honda-nsx-r',
     filename:           '/models/NSX-R-opt.glb',
     imageUrl:           '/images/cars/honda-nsx-r.jpg',
-    cardImagePosition:  'center 48%',   // 2400×1800 (4:3) — wind tunnel shot, car centered
+    cardImagePosition:  'center 52%',   // 2400×1578 (~1.52:1) — factory press studio, car centered
     displayName:        'Honda NSX-R',
     make:           'Honda',
     country:        'Japan',
@@ -138,7 +138,7 @@ export const CAR_CONFIGS: CarConfig[] = [
     slug:               'toyota-supra-rz',
     filename:           '/models/1998_toyota_supra_rz-opt.glb',
     imageUrl:           '/images/cars/toyota-supra-rz.jpg',
-    cardImagePosition:  'center 55%',   // 2400×1641 (~1.46:1) — outdoor press shot, slight down push
+    cardImagePosition:  'center 50%',   // 2400×1350 (16:9) — perfect ratio, side profile on autumn road
     displayName:        'Toyota Supra RZ',
     make:           'Toyota',
     country:        'Japan',
