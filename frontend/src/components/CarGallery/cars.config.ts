@@ -62,7 +62,7 @@ export const CAR_CONFIGS: CarConfig[] = [
     slug:               'mclaren-f1',
     filename:           '/models/mclaren_f1-opt.glb',
     imageUrl:           '/images/cars/mclaren-f1.jpg',
-    cardImagePosition:  'center 50%',   // 2400×1176 (2.04:1) — side-crop only, car centred
+    cardImagePosition:  'center 55%',   // 2400×1706 (~1.41:1) — studio black bg, car in lower half
     displayName:        'McLaren F1',
     make:           'McLaren',
     country:        'UK',
@@ -88,7 +88,7 @@ export const CAR_CONFIGS: CarConfig[] = [
     slug:               'honda-nsx-r',
     filename:           '/models/NSX-R-opt.glb',
     imageUrl:           '/images/cars/honda-nsx-r.jpg',
-    cardImagePosition:  'center 42%',   // 2400×1313 (~1.83:1) — near 16:9, slight sky crop
+    cardImagePosition:  'center 48%',   // 2400×1800 (4:3) — wind tunnel shot, car centered
     displayName:        'Honda NSX-R',
     make:           'Honda',
     country:        'Japan',
@@ -113,7 +113,7 @@ export const CAR_CONFIGS: CarConfig[] = [
     slug:               'nissan-skyline-r33',
     filename:           '/models/1997_nissan_skyline_gt-r_r33-opt.glb',
     imageUrl:           '/images/cars/nissan-skyline-r33.jpg',
-    cardImagePosition:  'center 52%',   // 2400×1438 (~1.67:1) — slightly taller, show car body
+    cardImagePosition:  'center 52%',   // 2400×1800 (4:3) — studio press photo, car centered
     displayName:        'Nissan Skyline GT-R R33',
     make:           'Nissan',
     country:        'Japan',
@@ -138,7 +138,7 @@ export const CAR_CONFIGS: CarConfig[] = [
     slug:               'toyota-supra-rz',
     filename:           '/models/1998_toyota_supra_rz-opt.glb',
     imageUrl:           '/images/cars/toyota-supra-rz.jpg',
-    cardImagePosition:  'center 62%',   // 2400×1800 (4:3) — tall crop, push down to show car not sky
+    cardImagePosition:  'center 55%',   // 2400×1641 (~1.46:1) — outdoor press shot, slight down push
     displayName:        'Toyota Supra RZ',
     make:           'Toyota',
     country:        'Japan',
@@ -188,7 +188,7 @@ export const CAR_CONFIGS: CarConfig[] = [
     slug:               'koenigsegg-ccxr',
     filename:           '/models/2010-Koenigsegg-CCXR-opt.glb',
     imageUrl:           '/images/cars/koenigsegg-ccxr.jpg',
-    cardImagePosition:  'center 48%',   // 2400×1600 (3:2) — slightly tall, car roughly centred
+    cardImagePosition:  'center 50%',   // 2400×1350 (16:9) — perfect ratio, no crop needed
     displayName:        'Koenigsegg CCXR Edition',
     make:           'Koenigsegg',
     country:        'Sweden',
