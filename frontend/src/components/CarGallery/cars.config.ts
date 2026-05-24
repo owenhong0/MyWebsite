@@ -21,18 +21,20 @@ export type CarSpec = {
 };
 
 export type CarConfig = {
-  slug:           string;               // URL segment: /gallery/:make/:slug
-  filename:       string;
-  imageUrl:       string;               // hero photo for cards & detail page
-  displayName:    string;
-  make:           string;
-  country:        string;
-  year:           number;
-  normalizeScale: number;
-  hdriPreset:     EnvironmentPreset;
-  cameraPreset:   CameraPreset;
-  specs:          CarSpec;
-  description:    string;
+  slug:               string;           // URL segment: /gallery/:make/:slug
+  filename:           string;
+  imageUrl:           string;           // hero photo for cards & detail page
+  /** CSS objectPosition for 16:9 card thumbnails (default 'center 40%') */
+  cardImagePosition?: string;
+  displayName:        string;
+  make:               string;
+  country:            string;
+  year:               number;
+  normalizeScale:     number;
+  hdriPreset:         EnvironmentPreset;
+  cameraPreset:       CameraPreset;
+  specs:              CarSpec;
+  description:        string;
 };
 
 // ─── Country → HDRI preset ───────────────────────────────────────────────────
@@ -57,10 +59,11 @@ export const ALL_MAKES = ['McLaren', 'Honda', 'Nissan', 'Toyota', 'Porsche', 'Ko
 // ─── Per-car configurations ───────────────────────────────────────────────────
 export const CAR_CONFIGS: CarConfig[] = [
   {
-    slug:           'mclaren-f1',
-    filename:       '/models/mclaren_f1-opt.glb',
-    imageUrl:       '/images/cars/mclaren-f1.jpg',
-    displayName:    'McLaren F1',
+    slug:               'mclaren-f1',
+    filename:           '/models/mclaren_f1-opt.glb',
+    imageUrl:           '/images/cars/mclaren-f1.jpg',
+    cardImagePosition:  'center 50%',   // 2400×1176 (2.04:1) — side-crop only, car centred
+    displayName:        'McLaren F1',
     make:           'McLaren',
     country:        'UK',
     year:           1994,
@@ -82,10 +85,11 @@ export const CAR_CONFIGS: CarConfig[] = [
       'every detail deliberate.',
   },
   {
-    slug:           'honda-nsx-r',
-    filename:       '/models/NSX-R-opt.glb',
-    imageUrl:       '/images/cars/honda-nsx-r.jpg',
-    displayName:    'Honda NSX-R',
+    slug:               'honda-nsx-r',
+    filename:           '/models/NSX-R-opt.glb',
+    imageUrl:           '/images/cars/honda-nsx-r.jpg',
+    cardImagePosition:  'center 42%',   // 2400×1313 (~1.83:1) — near 16:9, slight sky crop
+    displayName:        'Honda NSX-R',
     make:           'Honda',
     country:        'Japan',
     year:           1997,
@@ -106,10 +110,11 @@ export const CAR_CONFIGS: CarConfig[] = [
       'Honda\'s answer to Ferrari built with the precision of a watch.',
   },
   {
-    slug:           'nissan-skyline-r33',
-    filename:       '/models/1997_nissan_skyline_gt-r_r33-opt.glb',
-    imageUrl:       '/images/cars/nissan-skyline-r33.jpg',
-    displayName:    'Nissan Skyline GT-R R33',
+    slug:               'nissan-skyline-r33',
+    filename:           '/models/1997_nissan_skyline_gt-r_r33-opt.glb',
+    imageUrl:           '/images/cars/nissan-skyline-r33.jpg',
+    cardImagePosition:  'center 52%',   // 2400×1438 (~1.67:1) — slightly taller, show car body
+    displayName:        'Nissan Skyline GT-R R33',
     make:           'Nissan',
     country:        'Japan',
     year:           1997,
@@ -130,10 +135,11 @@ export const CAR_CONFIGS: CarConfig[] = [
       'made it a revelation on the Nürburgring — and a legend on every touge it ever touched.',
   },
   {
-    slug:           'toyota-supra-rz',
-    filename:       '/models/1998_toyota_supra_rz-opt.glb',
-    imageUrl:       '/images/cars/toyota-supra-rz.jpg',
-    displayName:    'Toyota Supra RZ',
+    slug:               'toyota-supra-rz',
+    filename:           '/models/1998_toyota_supra_rz-opt.glb',
+    imageUrl:           '/images/cars/toyota-supra-rz.jpg',
+    cardImagePosition:  'center 62%',   // 2400×1800 (4:3) — tall crop, push down to show car not sky
+    displayName:        'Toyota Supra RZ',
     make:           'Toyota',
     country:        'Japan',
     year:           1998,
@@ -154,10 +160,11 @@ export const CAR_CONFIGS: CarConfig[] = [
       'triple the stock power with supporting mods made it the definitive 1990s sports car.',
   },
   {
-    slug:           'porsche-gt3rs',
-    filename:       '/models/2023_Porsche_GT3RS-opt.glb',
-    imageUrl:       '/images/cars/porsche-gt3rs.jpg',
-    displayName:    'Porsche 911 GT3 RS',
+    slug:               'porsche-gt3rs',
+    filename:           '/models/2023_Porsche_GT3RS-opt.glb',
+    imageUrl:           '/images/cars/porsche-gt3rs.jpg',
+    cardImagePosition:  'center 38%',   // 1920×1080 (16:9) — perfect ratio, no crop needed
+    displayName:        'Porsche 911 GT3 RS',
     make:           'Porsche',
     country:        'Germany',
     year:           2023,
@@ -178,10 +185,11 @@ export const CAR_CONFIGS: CarConfig[] = [
       '4.0L screams to 9,000 rpm. This is Porsche\'s most extreme road car.',
   },
   {
-    slug:           'koenigsegg-ccxr',
-    filename:       '/models/2010-Koenigsegg-CCXR-opt.glb',
-    imageUrl:       '/images/cars/koenigsegg-ccxr.jpg',
-    displayName:    'Koenigsegg CCXR Edition',
+    slug:               'koenigsegg-ccxr',
+    filename:           '/models/2010-Koenigsegg-CCXR-opt.glb',
+    imageUrl:           '/images/cars/koenigsegg-ccxr.jpg',
+    cardImagePosition:  'center 48%',   // 2400×1600 (3:2) — slightly tall, car roughly centred
+    displayName:        'Koenigsegg CCXR Edition',
     make:           'Koenigsegg',
     country:        'Sweden',
     year:           2010,

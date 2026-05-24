@@ -89,7 +89,7 @@ export default function MakeSelectionPage() {
                   width:          '100%',
                   height:         '100%',
                   objectFit:      'cover',
-                  objectPosition: 'center 38%',
+                  objectPosition: car.cardImagePosition ?? 'center 40%',
                   display:        'block',
                   transition:     'transform 0.5s ease',
                   '.card-root:hover &': { transform: 'scale(1.03)' },
