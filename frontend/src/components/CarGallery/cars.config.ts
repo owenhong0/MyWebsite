@@ -62,7 +62,7 @@ export const CAR_CONFIGS: CarConfig[] = [
     slug:               'mclaren-f1',
     filename:           '/models/mclaren_f1-opt.glb',
     imageUrl:           '/images/cars/mclaren-f1.jpg',
-    cardImagePosition:  'center 55%',   // 2400×1706 (~1.41:1) — studio black bg, car in lower half
+    cardImagePosition:  'center 85%',   // 2400×1706 (~1.41:1) — studio black bg, push down to show full car
     displayName:        'McLaren F1',
     make:           'McLaren',
     country:        'UK',
@@ -138,7 +138,7 @@ export const CAR_CONFIGS: CarConfig[] = [
     slug:               'toyota-supra-rz',
     filename:           '/models/1998_toyota_supra_rz-opt.glb',
     imageUrl:           '/images/cars/toyota-supra-rz.jpg',
-    cardImagePosition:  'center 50%',   // 2400×1350 (16:9) — perfect ratio, side profile on autumn road
+    cardImagePosition:  'center 50%',   // 2400×1529 (~1.57:1) — JDM RZ silver, concrete architecture
     displayName:        'Toyota Supra RZ',
     make:           'Toyota',
     country:        'Japan',
