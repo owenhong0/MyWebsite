@@ -317,7 +317,7 @@ export default function IndividualCarPage() {
             width:          '100%',
             height:         '100%',
             objectFit:      'cover',
-            objectPosition: 'center 35%',
+            objectPosition: car.cardImagePosition ?? 'center 40%',
             display:        'block',
             // slight editorial desaturation
             filter:         'saturate(0.88) contrast(1.06)',

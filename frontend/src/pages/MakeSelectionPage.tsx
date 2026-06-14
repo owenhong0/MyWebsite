@@ -67,20 +67,20 @@ export default function MakeSelectionPage() {
             onClick={() => navigate(`/gallery/${make}/${car.slug}`)}
             sx={{
               cursor:       'pointer',
-              background:   '#f4f4f4',
-              border:       '1px solid rgba(0,0,0,0.07)',
+              background:   '#111',
+              border:       '1px solid rgba(255,255,255,0.07)',
               borderRadius: '2px',
               overflow:     'hidden',
               transition:   'box-shadow 0.25s ease, transform 0.25s ease',
               '&:hover': {
-                boxShadow: '0 8px 32px rgba(0,0,0,0.16)',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.6)',
                 transform: 'translateY(-3px)',
               },
-              '&:hover .car-name': { color: '#000' },
+              '&:hover .car-name': { color: '#fff' },
             }}
           >
             {/* Photo — fills card face, crops to 16:9 */}
-            <Box sx={{ position: 'relative', aspectRatio: '16 / 9', overflow: 'hidden', background: '#e8e8e8' }}>
+            <Box sx={{ position: 'relative', aspectRatio: '16 / 9', overflow: 'hidden', background: '#1a1a1a' }}>
               <Box
                 component="img"
                 src={car.imageUrl}
@@ -89,7 +89,7 @@ export default function MakeSelectionPage() {
                   width:          '100%',
                   height:         '100%',
                   objectFit:      'cover',
-                  objectPosition: 'center 38%',
+                  objectPosition: car.cardImagePosition ?? 'center 40%',
                   display:        'block',
                   transition:     'transform 0.5s ease',
                   '.card-root:hover &': { transform: 'scale(1.03)' },
@@ -97,13 +97,13 @@ export default function MakeSelectionPage() {
               />
             </Box>
 
-            {/* Footer — Porsche-style: white strip, name + meta */}
+            {/* Footer — dark strip, name + meta */}
             <Box sx={{
               px:         '1.4rem',
               pt:         '0.9rem',
               pb:         '1.1rem',
-              borderTop:  '1px solid rgba(0,0,0,0.06)',
-              background: '#ffffff',
+              borderTop:  '1px solid rgba(255,255,255,0.06)',
+              background: '#111',
             }}>
               <Typography
                 className="car-name"
@@ -111,7 +111,7 @@ export default function MakeSelectionPage() {
                   fontSize:      '15px',
                   fontWeight:    500,
                   letterSpacing: '0.01em',
-                  color:         'rgba(0,0,0,0.85)',
+                  color:         'rgba(255,255,255,0.85)',
                   transition:    'color 0.2s',
                   mb:            '3px',
                 }}
@@ -121,7 +121,7 @@ export default function MakeSelectionPage() {
               <Typography sx={{
                 fontSize:      '11px',
                 letterSpacing: '0.07em',
-                color:         'rgba(0,0,0,0.38)',
+                color:         'rgba(255,255,255,0.35)',
                 textTransform: 'uppercase',
               }}>
                 {car.year} · {car.country}
