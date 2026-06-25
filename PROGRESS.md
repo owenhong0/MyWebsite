@@ -17,13 +17,13 @@ A full-stack car-gallery portfolio app.
 | Phase | Task | Status | Notes |
 |-------|------|--------|-------|
 | 1.1 | Scaffold + React + TS | ✅ | React 19.1 + TS 4.9.5, but on **CRA**, not Vite |
-| 1.1 | R3F/drei/three/@types/three/zustand installed | ⚠️ | R3F v9, drei v10, three, @types/three ✅ — **zustand ❌ missing** |
-| 1.1 | TS strict + path aliases | ⚠️ | `strict: true` ✅; **no path aliases** in `tsconfig.json` |
+| 1.1 | R3F/drei/three/@types/three/zustand installed | ✅ | R3F v9, drei v10, three, @types/three ✅ — **zustand ✅ installed** |
+| 1.1 | TS strict + path aliases | ✅ | `strict: true` ✅; **path aliases ✅ added** in `tsconfig.json` |
 | 1.1 | ESLint + Prettier | ⚠️ | CRA `react-app` ESLint preset only; **no Prettier**, no standalone config |
-| 1.2 | Canvas gl props (antialias:false, powerPreference) | ❌ | `<Canvas shadows camera>` has **no `gl` prop** at all |
-| 1.2 | shadows, dpr={[1,2]}, frameloop="demand" | ⚠️ | `shadows` ✅; **no `dpr`, no `frameloop`** (defaults to "always") |
-| 1.3 | FastAPI + uvicorn + python-multipart | ⚠️ | FastAPI ✅, uvicorn ✅; **`python-multipart` ❌** not in requirements |
-| 1.3 | Routes GET /cars, /cars/{id}, /health | ⚠️ | `GET /cars/` ✅; `GET /cars/{id}/info` ✅ (not bare `/{id}`); **`/health` ❌** |
+| 1.2 | Canvas gl props (antialias:false, powerPreference) | ✅ | `<Canvas shadows camera>` has **gl props ✅ added** |
+| 1.2 | shadows, dpr={[1,2]}, frameloop="demand" | ✅ | `shadows` ✅; **dpr ✅, frameloop ✅** added |
+| 1.3 | FastAPI + uvicorn + python-multipart | ✅ | FastAPI ✅, uvicorn ✅; **`python-multipart` ✅** added to requirements |
+| 1.3 | Routes GET /cars, /cars/{id}, /health | ✅ | `GET /cars/` ✅; `GET /cars/{id}/info` ✅; **`/health` ✅** exists |
 | 1.3 | CORS middleware | ✅ | Configured for `localhost:3000` + `:5173` |
 | 1.3 | Static serving for build | ❌ | No `StaticFiles` mount; frontend deploys separately to GH Pages |
 | 2.1 | @gltf-transform/cli | ❌ | Not present, not documented |
@@ -34,15 +34,15 @@ A full-stack car-gallery portfolio app.
 | 3.1 | `<Environment>` HDRI | ✅ | `<Environment preset background>` in Canvas |
 | 3.2 | ToneMapping ACES_FILMIC last in EffectComposer | ❌ | No EffectComposer at all |
 | 3.3 | ContactShadows / AccumulativeShadows | ✅ | `<ContactShadows>` present |
-| 3.4 | `<CarModel>` w/ Suspense + fallback | ⚠️ | `CarModel` + `useGLTF` ✅; **no `<Suspense fallback>`** around it |
+| 3.4 | `<CarModel>` w/ Suspense + fallback | ✅ | `CarModel` + `useGLTF` ✅; **`<Suspense fallback>` ✅ added** around it |
 | 3.4 | `<Bounds>` auto-frame | ❌ | Manual camera presets instead; no `<Bounds>` |
 | 4.x | @react-three/postprocessing + postprocessing | ❌ | Neither installed |
 | 4.x | EffectComposer (N8AO,Bloom,DoF,Vignette,SMAA,ToneMapping) | ❌ | No post-processing pipeline |
 | 4.x | n8ao installed | ❌ | Not installed |
-| 5.1 | OrbitControls enableDamping/min/maxDistance | ⚠️ | min/maxDistance + azimuth/polar limits ✅; **`enableDamping`/`dampingFactor` not set** |
+| 5.1 | OrbitControls enableDamping/min/maxDistance | ✅ | min/maxDistance + azimuth/polar limits ✅; **`enableDamping`/`dampingFactor` ✅ added** |
 | 5.2 | Zustand store (lastInteraction + isIdle) | ❌ | Idle handled via local `useRef`/`useState`, no Zustand |
-| 5.2 | Inactivity setTimeout (5s) | ⚠️ | Implemented, but **4000ms** not 5s |
-| 5.3 | GSAP installed | ❌ | Not installed |
+| 5.2 | Inactivity setTimeout (5s) | ✅ | Implemented, **5000ms ✅ fixed** |
+| 5.3 | GSAP installed | ✅ | **GSAP ✅ installed** |
 | 5.3 | Idle cinematic GSAP tween → autoRotate | ⚠️ | Auto-rotate on idle ✅; **no GSAP camera tween** |
 | 5.3 | Cancel cinematic on interaction | ✅ | `mousemove` cancels auto-rotate ✅ |
 | 6.1 | r3f-perf `<Perf>` in dev | ❌ | Not installed |

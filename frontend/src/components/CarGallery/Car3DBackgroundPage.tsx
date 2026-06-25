@@ -1,4 +1,5 @@
 import React, {
+  Suspense,
   useCallback,
   useEffect,
   useRef,
@@ -161,6 +162,8 @@ function CameraController({
       enabled={enabled}
       autoRotate={autoRotate}
       autoRotateSpeed={0.5}
+      enableDamping
+      dampingFactor={0.05}
       onStart={onDragStart}
       onEnd={onDragEnd}
       minAzimuthAngle={-Math.PI * (100 / 180)}
@@ -211,7 +214,7 @@ const FullscreenViewer = () => {
       }
       setAutoRotate(false);
       if (idleTimer.current) clearTimeout(idleTimer.current);
-      idleTimer.current = setTimeout(() => setAutoRotate(true), 4000);
+      idleTimer.current = setTimeout(() => setAutoRotate(true), 5000);
     };
     window.addEventListener('mousemove', handleMove);
     return () => {
@@ -277,6 +280,9 @@ const FullscreenViewer = () => {
       {/* ── Canvas ──────────────────────────────────────────────────────── */}
       <Canvas
         shadows
+        gl={{ antialias: false, powerPreference: 'high-performance' }}
+        dpr={[1, 2]}
+        frameloop="demand"
         style={{ height: '100%', width: '100%' }}
         camera={{ position: [4, 1.2, 7], fov: 50 }}
       >
@@ -298,7 +304,9 @@ const FullscreenViewer = () => {
         <ShadowPlane />
 
         {/* Car model (auto-grounded in CarModel.tsx) */}
-        <CarModel config={selectedConfig} />
+        <Suspense fallback={null}>
+          <CarModel config={selectedConfig} />
+        </Suspense>
 
         {/* Step 5 — single ContactShadows, everything else removed */}
         <ContactShadows

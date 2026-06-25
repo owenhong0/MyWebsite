@@ -1,4 +1,5 @@
 import os
+import json
 
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -9,6 +10,7 @@ from .database import get_db, engine
 from . import models, schemas
 from .models import Car, Variant, Model
 from .schemas import DishList, DishResponse, DishCreate
+
 
 S3_BUCKET = os.environ.get("S3_BUCKET")
 
@@ -41,6 +43,10 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return user
+
+@app.get("/health", response_model=schemas.Health)
+async def health_check ():
+    return {"status": "ok"}
 
 
 @app.get("/cars/{car_id}/info")
