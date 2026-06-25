@@ -57,7 +57,7 @@ export const GALLERY_CAMERA: CameraPreset = {
 export const ALL_MAKES = ['McLaren', 'Honda', 'Nissan', 'Toyota', 'Porsche', 'Koenigsegg'] as const;
 
 // ─── Per-car configurations ───────────────────────────────────────────────────
-export const CAR_CONFIGS: CarConfig[] = [
+const RAW_CAR_CONFIGS: CarConfig[] = [
   {
     slug:               'mclaren-f1',
     filename:           '/models/mclaren_f1-opt.glb',
@@ -211,6 +211,29 @@ export const CAR_CONFIGS: CarConfig[] = [
       'from a tiny workshop in Ängelholm.',
   },
 ];
+
+// ─── Asset path resolution ─────────────────────────────────────────────────────
+// Prefix public-folder asset paths with base URL so they resolve correctly when
+// the app is served from a sub-path (e.g. GitHub Pages at /MyWebsite/). Without
+// this, absolute '/models/...glb' and '/images/...' 404 on the deployed site.
+export const asset = (p: string): string => {
+  if (!p.startsWith('/')) return p;
+  
+  // In Vite, import.meta.env.BASE_URL provides the base path
+  const baseUrl = import.meta.env.BASE_URL || '/';
+  
+  // If base URL is just '/', return the path as-is
+  if (baseUrl === '/') return p;
+  
+  // Otherwise, prepend the base URL (removing trailing slash to avoid double slashes)
+  return `${baseUrl.replace(/\/$/, '')}${p}`;
+};
+
+export const CAR_CONFIGS: CarConfig[] = RAW_CAR_CONFIGS.map((c) => ({
+  ...c,
+  filename: asset(c.filename),
+  imageUrl: asset(c.imageUrl),
+}));
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 export const getCarBySlug = (slug: string): CarConfig | undefined =>

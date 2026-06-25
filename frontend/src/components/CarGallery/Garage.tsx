@@ -1,9 +1,10 @@
 import { useGLTF } from "@react-three/drei";
 import { DoubleSide, Light, Mesh, MeshStandardMaterial, Vector3 } from "three";
 import { useEffect } from "react";
+import { asset } from "./cars.config";
 
 export function Garage() {
-    const { scene } = useGLTF("/models/showroom.glb");
+    const { scene } = useGLTF(asset("/models/showroom.glb"));
 
     // Keep emissive panel glow and fix materials that block the HDRI background
     useEffect(() => {

@@ -33,9 +33,10 @@
     "zustand": "^5.0.14"
   },
   "scripts": {
-    "dev": "vite",
-    "start": "vite --open",
-    "build": "vite build",
+    "dev": "vite --mode development",
+    "start": "vite --mode development --open",
+    "build": "vite build --mode production",
+    "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint . --ext js,jsx,ts,tsx",
     "predeploy": "npm run build",
