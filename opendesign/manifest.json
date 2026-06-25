@@ -1,0 +1,39 @@
+{
+  "generated": "2026-06-25T18:56:48.210217+00:00",
+  "sections": [
+    {
+      "id": "mockups",
+      "label": "Mockups",
+      "groups": [
+        {
+          "slug": "forza-gallery",
+          "files": [
+            {
+              "label": "index.html",
+              "path": "mockups/forza-gallery/index.html"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "design-systems",
+      "label": "Design Systems",
+      "groups": [
+        {
+          "slug": "forza-gallery",
+          "files": [
+            {
+              "label": "SKILL.md",
+              "path": "design-systems/forza-gallery/SKILL.md"
+            },
+            {
+              "label": "colors_and_type.css",
+              "path": "design-systems/forza-gallery/tokens/colors_and_type.css"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

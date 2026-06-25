@@ -1,0 +1,116 @@
+/* ============================================================================
+   FORZA GALLERY — Design System Tokens
+   A premium automotive-game UI for a car-enthusiast portfolio.
+   Reference: Forza Motorsport 4 menus + Forza Horizon cinematic screens.
+   Dark-only. Sharp edges. Red used sparingly for emphasis.
+   ============================================================================ */
+
+/* ---- Fonts (Google Fonts) -------------------------------------------------
+   Load in HTML head:
+   Barlow Semi Condensed (display + tracked labels), Barlow (body),
+   Space Mono (class badges, stat numerals).
+--------------------------------------------------------------------------- */
+
+:root {
+  /* ---- Raw color ramp ---- */
+  --bg-primary:    #0d0d0d;  /* page / canvas background */
+  --bg-surface:    #1a1a1a;  /* cards, panels, strips */
+  --bg-elevated:   #242424;  /* hover states, selected tiles */
+  --accent-red:    #e8002d;  /* active tabs, badges, category labels */
+  --accent-red-dim:#9b0020;  /* hover on red elements */
+  --text-primary:  #f0f0f0;  /* headlines, car names */
+  --text-secondary:#8a8a8a;  /* body copy, metadata labels */
+  --text-label:    #c0c0c0;  /* stat bar labels, nav items */
+  --border-subtle: #2e2e2e;  /* dividers, card borders */
+  --stat-fill:     #e8002d;  /* stat bar fill */
+  --stat-track:    #3a3a3a;  /* stat bar background */
+
+  /* ---- Class badge colors (licence-plate style) ---- */
+  --class-s: #e8002d;  /* S — red */
+  --class-a: #ff7a00;  /* A — orange */
+  --class-b: #ffc400;  /* B — yellow */
+  --class-c: #28c76f;  /* C — green */
+  --class-d: #3a9bff;  /* D — blue */
+
+  /* ---- Type families ---- */
+  --font-display: "Barlow Semi Condensed", "Arial Narrow", sans-serif;
+  --font-body:    "Barlow", system-ui, sans-serif;
+  --font-mono:    "Space Mono", ui-monospace, monospace;
+
+  /* ---- Type scale ---- */
+  --label:    11px;   /* tracked uppercase category tags */
+  --caption:  13px;   /* body / description */
+  --sub:      14px;   /* year / make subheading, nav tabs */
+  --h3:       20px;
+  --h2:       28px;
+  --h1:       34px;   /* car names / headlines (24–36) */
+  --display:  56px;   /* manufacturer name on select screen */
+
+  --track-label: 0.18em;  /* letter-spacing for section labels */
+  --track-tab:   0.05em;
+  --track-tight: -0.01em; /* headlines */
+
+  /* ---- Spacing scale ---- */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+  --sp-8: 64px;
+
+  /* ---- Radius (sharp — max 4px) ---- */
+  --radius:  2px;
+  --radius-lg: 4px;
+
+  /* ---- Borders ---- */
+  --hairline: 1px solid var(--border-subtle);
+
+  /* ---- Motion ---- */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 0.18s;
+  --dur:      0.3s;
+  --dur-slow: 0.5s;
+
+  /* ---- Semantic aliases ---- */
+  --surface-primary: var(--bg-primary);
+  --surface-card:    var(--bg-surface);
+  --fg-1: var(--text-primary);
+  --fg-2: var(--text-secondary);
+  --fg-label: var(--text-label);
+}
+
+/* ============================================================================
+   Base / reset shared by all Forza Gallery mockups
+   ============================================================================ */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Section label — small red tracked uppercase tag above headings */
+.ds-section-label {
+  font-family: var(--font-display);
+  font-size: var(--label);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--accent-red);
+  font-weight: 600;
+}
+.ds-section-label--muted { color: var(--text-secondary); }
+
+/* Divider rule — the key Forza signature */
+.ds-divider { height: 1px; background: var(--border-subtle); border: 0; width: 100%; }
+
+/* Headline */
+.ds-headline {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: var(--track-tight);
+  color: var(--text-primary);
+}

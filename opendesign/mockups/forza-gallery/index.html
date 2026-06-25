@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Forza Gallery — UI Redesign</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Semi+Condensed:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../../design-systems/forza-gallery/tokens/colors_and_type.css" />
+<style>
+  /* ===================== Shell / screen switcher ===================== */
+  body { font-family: var(--font-body); }
+  .switcher {
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; gap: 2px; flex-wrap: wrap;
+    padding: 10px 16px; background: #060606; border-bottom: var(--hairline);
+  }
+  .switcher .brand {
+    font-family: var(--font-display); font-weight: 700; letter-spacing: 0.16em;
+    text-transform: uppercase; font-size: 13px; color: var(--text-primary);
+    margin-right: 18px;
+  }
+  .switcher .brand b { color: var(--accent-red); }
+  .switcher button {
+    font-family: var(--font-display); font-size: 12px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-secondary);
+    background: transparent; border: 1px solid transparent; padding: 7px 12px;
+    cursor: pointer; border-radius: var(--radius); transition: color var(--dur-fast), background var(--dur-fast);
+  }
+  .switcher button:hover { color: var(--text-primary); background: var(--bg-surface); }
+  .switcher button.active { color: var(--text-primary); background: var(--bg-elevated); border-color: var(--accent-red); }
+
+  .stage { display: flex; justify-content: center; padding: 28px 16px 64px; }
+  .frame { display: none; }
+  .frame.active { display: block; }
+  .frame-caption {
+    max-width: 1440px; margin: 0 auto 12px; color: var(--text-secondary);
+    font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase;
+    font-family: var(--font-display);
+  }
+  .frame-caption b { color: var(--text-primary); }
+
+  /* The 1440 canvas */
+  .canvas-1440 {
+    width: 1440px; max-width: 1440px; height: 860px; position: relative;
+    background: var(--bg-primary); border: var(--hairline); overflow: hidden;
+  }
+  .canvas-scroll { height: 1180px; overflow-y: auto; }
+
+  /* ===================== Shared primitives ===================== */
+  .label {
+    font-family: var(--font-display); font-size: var(--label);
+    letter-spacing: var(--track-label); text-transform: uppercase; font-weight: 600;
+  }
+  .label.red { color: var(--accent-red); }
+  .label.grey { color: var(--text-secondary); }
+  .label.light { color: var(--text-label); }
+  .rule { height: 1px; background: var(--border-subtle); width: 100%; }
+  .car-name {
+    font-family: var(--font-display); font-weight: 700; letter-spacing: var(--track-tight);
+    color: var(--text-primary); line-height: 1.0;
+  }
+  .meta-sub { font-size: var(--sub); color: var(--text-secondary); }
+  .body-copy { font-size: var(--caption); color: var(--text-secondary); line-height: 1.6; }
+
+  /* 3D viewer placeholder */
+  .viewer-ph {
+    position: relative; width: 100%; height: 100%;
+    background:
+      repeating-linear-gradient(135deg, #131313 0 14px, #161616 14px 28px),
+      radial-gradient(ellipse at 50% 120%, #1d1d1d 0%, #0d0d0d 70%);
+    display: flex; align-items: flex-end; justify-content: center;
+  }
+  .viewer-ph .silhouette {
+    position: absolute; left: 50%; bottom: 14%; transform: translateX(-50%);
+    width: 62%; height: 30%; border-radius: 40% 40% 8px 8px / 80% 80% 8px 8px;
+    background: radial-gradient(ellipse at 50% 30%, #2b2b2b 0%, #161616 70%, transparent 100%);
+    filter: blur(2px);
+  }
+  .viewer-ph .floor {
+    position: absolute; left: 0; right: 0; bottom: 0; height: 26%;
+    background: linear-gradient(180deg, transparent, rgba(0,0,0,0.55));
+  }
+  .viewer-ph .ph-cap {
+    position: relative; margin-bottom: 14px; font-family: var(--font-mono);
+    font-size: 11px; color: #5a5a5a; letter-spacing: 0.04em;
+    background: rgba(0,0,0,0.45); padding: 4px 8px; border: 1px solid #222;
+  }
+
+  /* NavTab */
+  .navtabs { display: flex; gap: 26px; }
+  .navtab {
+    font-family: var(--font-display); font-size: var(--sub); letter-spacing: var(--track-tab);
+    text-transform: uppercase; color: var(--text-secondary); padding: 6px 0 10px;
+    position: relative; cursor: pointer; background: none; border: 0; font-weight: 500;
+    transition: color var(--dur-fast);
+  }
+  .navtab:hover { color: var(--text-label); }
+  .navtab.active { color: var(--text-primary); }
+  .navtab.active::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
+    background: var(--accent-red);
+  }
+
+  /* Sidebar list */
+  .sidebar { display: flex; flex-direction: column; gap: 18px; }
+  .sidebar .nav-item {
+    font-family: var(--font-display); font-size: var(--label); letter-spacing: var(--track-label);
+    text-transform: uppercase; color: var(--text-secondary); cursor: pointer;
+    transition: color var(--dur-fast); display: flex; align-items: center; gap: 8px;
+  }
+  .sidebar .nav-item::before {
+    content: ""; width: 14px; height: 1px; background: var(--border-subtle);
+    transition: width var(--dur-fast), background var(--dur-fast);
+  }
+  .sidebar .nav-item:hover { color: var(--text-primary); }
+  .sidebar .nav-item:hover::before { width: 24px; background: var(--accent-red); }
+  .sidebar .nav-item.active { color: var(--text-primary); }
+  .sidebar .nav-item.active::before { width: 24px; background: var(--accent-red); }
+
+  /* Hover arrow */
+  .hover-arrow {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 54px; height: 120px; display: flex; align-items: center; justify-content: center;
+    color: var(--text-secondary); font-size: 30px; cursor: pointer;
+    background: linear-gradient(90deg, transparent, rgba(232,0,45,0.0));
+    transition: color var(--dur-fast), background var(--dur-fast); border: 0;
+    font-family: var(--font-display);
+  }
+  .hover-arrow.right { right: 0; }
+  .hover-arrow.left { left: 0; }
+  .hover-arrow:hover { color: var(--text-primary); }
+  .hover-arrow.right:hover { background: linear-gradient(90deg, transparent, rgba(232,0,45,0.14)); }
+  .hover-arrow.left:hover  { background: linear-gradient(270deg, transparent, rgba(232,0,45,0.14)); }
+
+  /* Vertical rotated label */
+  .vlabel {
+    position: absolute; left: 0; top: 0; bottom: 0; width: 52px;
+    display: flex; align-items: center; justify-content: center;
+    border-right: var(--hairline);
+  }
+  .vlabel span {
+    writing-mode: vertical-rl; transform: rotate(180deg);
+    font-family: var(--font-display); font-size: 12px; letter-spacing: 0.42em;
+    text-transform: uppercase; color: var(--text-label); white-space: nowrap;
+  }
+
+  /* Class badge — licence plate */
+  .class-badge {
+    display: inline-flex; align-items: baseline; gap: 6px; padding: 4px 9px;
+    font-family: var(--font-mono); font-weight: 700; color: #0d0d0d; border-radius: var(--radius);
+    font-size: 15px; letter-spacing: 0.02em; line-height: 1;
+  }
+  .class-badge .num { font-size: 13px; }
+  .cb-s { background: var(--class-s); color: #fff; }
+  .cb-a { background: var(--class-a); }
+  .cb-b { background: var(--class-b); }
+  .cb-c { background: var(--class-c); }
+  .cb-d { background: var(--class-d); color: #fff; }
+
+  /* Stat bar */
+  .stat { margin-bottom: 14px; }
+  .stat .top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px; }
+  .stat .nm { font-family: var(--font-display); font-size: var(--label); letter-spacing: var(--track-label); text-transform: uppercase; color: var(--text-label); }
+  .stat .vl { font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary); }
+  .stat .track { height: 6px; background: var(--stat-track); border-radius: 1px; overflow: hidden; }
+  .stat .fill { height: 100%; width: 0; background: var(--stat-fill); transition: width 0.9s var(--ease); }
+  .frame.active .stat .fill { width: var(--w); }
+
+  /* Emblem tile */
+  .emblem-strip { display: flex; gap: 10px; overflow-x: auto; padding: 14px 18px; scrollbar-width: thin; }
+  .emblem-tile {
+    flex: 0 0 auto; width: 92px; height: 92px; background: var(--bg-surface);
+    border: var(--hairline); border-radius: var(--radius); cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+    transition: background var(--dur-fast), border-color var(--dur-fast), transform var(--dur-fast);
+  }
+  .emblem-tile:hover { background: var(--bg-elevated); transform: translateY(-2px); }
+  .emblem-tile .logo {
+    width: 34px; height: 34px; border-radius: 50%; border: 1px solid #444;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display); font-weight: 700; font-size: 13px; color: var(--text-label);
+  }
+  .emblem-tile .nm { font-family: var(--font-display); font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-secondary); }
+  .emblem-tile.selected { background: #ededed; border-color: #ededed; }
+  .emblem-tile.selected .logo { color: #111; border-color: #999; }
+  .emblem-tile.selected .nm { color: #111; }
+
+  /* Car thumbnail card */
+  .filmstrip { display: flex; gap: 12px; overflow-x: auto; padding: 4px 2px 10px; scrollbar-width: thin; }
+  .thumb-card {
+    flex: 0 0 auto; width: 150px; background: var(--bg-surface); border: var(--hairline);
+    border-radius: var(--radius); cursor: pointer; transition: border-color var(--dur-fast), background var(--dur-fast);
+  }
+  .thumb-card:hover { border-color: #555; background: var(--bg-elevated); }
+  .thumb-card.active { border-color: var(--accent-red); }
+  .thumb-card .pic { height: 84px; background: repeating-linear-gradient(135deg,#131313 0 10px,#171717 10px 20px); border-bottom: var(--hairline); }
+  .thumb-card .info { padding: 8px 10px; }
+  .thumb-card .info .mk { font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-secondary); font-family: var(--font-display); }
+  .thumb-card .info .md { font-family: var(--font-display); font-weight: 600; font-size: 14px; color: var(--text-primary); }
+
+  /* Featured ribbon */
+  .ribbon {
+    position: absolute; top: 16px; left: -34px; transform: rotate(-45deg);
+    background: var(--accent-red); color: #fff; font-family: var(--font-display);
+    font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 700;
+    padding: 5px 40px; z-index: 3;
+  }
+
+  /* flag block */
+  .flag { display: inline-block; width: 22px; height: 14px; vertical-align: middle; border: 1px solid #333; }
+  .flag-it { background: linear-gradient(90deg,#009246 0 33%,#fff 33% 66%,#ce2b37 66%); }
+  .flag-de { background: linear-gradient(180deg,#000 0 33%,#dd0000 33% 66%,#ffce00 66%); }
+  .flag-us { background: repeating-linear-gradient(180deg,#b22234 0 2px,#fff 2px 4px); }
+  .flag-gb { background: #012169; }
+  .flag-jp { background: #fff; position: relative; }
+  .flag-jp::after { content:""; position:absolute; inset:0; margin:auto; width:8px; height:8px; border-radius:50%; background:#bc002d; }
+  .flag-se { background: linear-gradient(90deg,#006aa7 0 30%,#fecc00 30% 45%,#006aa7 45%); }
+
+  /* Car profile card (scroll view) */
+  .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  .profile-card { background: var(--bg-surface); border: var(--hairline); border-radius: var(--radius); overflow: hidden; }
+  .profile-card .pic { height: 200px; background: repeating-linear-gradient(135deg,#131313 0 14px,#171717 14px 28px); border-bottom: var(--hairline); position: relative; }
+  .profile-card .pic .cap { position:absolute; bottom:8px; right:10px; font-family:var(--font-mono); font-size:10px; color:#555; }
+  .profile-card .pad { padding: 18px 20px 22px; }
+
+  /* Nav overlay */
+  .nav-overlay {
+    position: absolute; inset: 0; background: rgba(8,8,8,0.92); backdrop-filter: blur(2px);
+    display: flex; flex-direction: column; justify-content: center; padding-left: 120px; gap: 6px; z-index: 50;
+  }
+  .nav-overlay a {
+    font-family: var(--font-display); font-weight: 700; font-size: 64px; letter-spacing: -0.01em;
+    color: var(--text-primary); text-decoration: none; line-height: 1.15; width: max-content; cursor: pointer;
+    transition: color var(--dur-fast), transform var(--dur-fast);
+  }
+  .nav-overlay a:hover { color: var(--accent-red); transform: translateX(8px); }
+  .nav-overlay .close {
+    position: absolute; top: 30px; right: 40px; color: var(--accent-red);
+    font-family: var(--font-display); font-size: 30px; cursor: pointer; background: none; border: 0;
+  }
+
+  /* dropdown */
+  .dropdown-trigger {
+    font-family: var(--font-display); font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--text-label); cursor: pointer; background: none; border: 0; display: inline-flex; gap: 8px; align-items: center;
+  }
+  .dropdown-panel {
+    position: absolute; top: 64px; left: 50%; transform: translateX(-50%) translateY(-8px);
+    background: var(--bg-surface); border: var(--hairline); border-radius: var(--radius);
+    padding: 18px 26px; display: flex; flex-direction: column; gap: 14px; opacity: 0; pointer-events: none;
+    transition: opacity var(--dur-fast), transform var(--dur-fast); z-index: 40; min-width: 220px;
+  }
+  .dropdown-panel.open { opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0); }
+
+  .icon-btn { background: none; border: 0; color: var(--text-secondary); cursor: pointer; font-family: var(--font-display); font-size: 20px; transition: color var(--dur-fast); }
+  .icon-btn:hover { color: var(--text-primary); }
+
+  /* Component library */
+  .kit { width: 1440px; max-width: 1440px; }
+  .kit h2 { font-family: var(--font-display); font-weight: 700; letter-spacing: 0.04em; font-size: 22px; margin: 0 0 4px; }
+  .kit .block { border: var(--hairline); border-radius: var(--radius); padding: 22px 24px; margin-bottom: 18px; background: #0f0f0f; }
+  .kit .row { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
+  .kit .spec { font-family: var(--font-mono); font-size: 10px; color: #5a5a5a; margin-top: 12px; }
+
+  /* responsive frames row */
+  .resp-row { display: flex; gap: 40px; align-items: flex-start; flex-wrap: wrap; justify-content: center; }
+  .device { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .device .dlabel { font-family: var(--font-display); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-secondary); }
+  .device .screen { background: var(--bg-primary); border: var(--hairline); overflow: hidden; position: relative; }
+  .tablet { width: 768px; height: 540px; }
+  .mobile { width: 390px; height: 720px; }
+
+  /* flow connector */
+  .flow { width: 1440px; max-width: 1440px; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 60px 10px; }
+  .flow .node {
+    flex: 1; background: var(--bg-surface); border: var(--hairline); border-radius: var(--radius);
+    padding: 18px 14px; text-align: center; cursor: pointer; transition: border-color var(--dur-fast), background var(--dur-fast);
+  }
+  .flow .node:hover { border-color: var(--accent-red); background: var(--bg-elevated); }
+  .flow .node .step { font-family: var(--font-mono); font-size: 10px; color: var(--accent-red); }
+  .flow .node .nm { font-family: var(--font-display); font-weight: 600; font-size: 15px; margin-top: 8px; color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.06em; }
+  .flow .node .mini { height: 70px; margin-top: 12px; background: repeating-linear-gradient(135deg,#131313 0 8px,#171717 8px 16px); border: var(--hairline); }
+  .flow .arrow { color: var(--text-secondary); font-family: var(--font-display); font-size: 22px; flex: 0 0 auto; }
+</style>
+</head>
+<body>
+
+<nav class="switcher">
+  <span class="brand">FORZA<b>·</b>GALLERY</span>
+  <button data-go="home" class="active">1 · Home</button>
+  <button data-go="gallery">2 · Gallery</button>
+  <button data-go="manufacturer">3 · Manufacturer</button>
+  <button data-go="cardetail">4 · Car Detail</button>
+  <button data-go="scroll">5 · Scroll Detail</button>
+  <button data-go="navmenu">6 · Nav Menu</button>
+  <button data-go="components">Components</button>
+  <button data-go="responsive">Responsive</button>
+  <button data-go="flow">Flow</button>
+</nav>
+
+<div class="stage">
+
+  <!-- ============================== 1 · HOME ============================== -->
+  <section class="frame active" id="home">
+    <div class="frame-caption"><b>01 — Home Screen.</b> Tab nav · sidebar · framed 3D viewer · hover arrow.</div>
+    <div class="canvas-1440">
+      <!-- top nav -->
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:26px 56px 0 96px;">
+        <div class="navtabs">
+          <button class="navtab active">Gallery</button>
+          <button class="navtab">Travel</button>
+          <button class="navtab">Food</button>
+          <button class="navtab">Outdoor</button>
+        </div>
+        <button class="icon-btn" title="Open menu" onclick="go('navmenu')">≡</button>
+      </div>
+      <div style="padding:0 56px; margin-top:18px;"><div class="rule"></div></div>
+
+      <!-- body -->
+      <div style="display:grid; grid-template-columns:220px 1fr; gap:0; height:680px;">
+        <!-- sidebar -->
+        <div style="padding:54px 0 0 96px;">
+          <div class="label grey" style="margin-bottom:26px;">Sections</div>
+          <div class="sidebar">
+            <div class="nav-item active">Explore Car Gallery</div>
+            <div class="nav-item">Travelling</div>
+            <div class="nav-item">Food / Cooking</div>
+            <div class="nav-item">Questions</div>
+          </div>
+        </div>
+        <!-- viewer -->
+        <div style="position:relative; padding:32px 40px;">
+          <div style="position:absolute; top:34px; left:40px;" class="label red">Featured</div>
+          <div style="height:100%; border:var(--hairline); position:relative;">
+            <div class="viewer-ph">
+              <div class="silhouette"></div><div class="floor"></div>
+              <div class="ph-cap">WebGL CANVAS — FERRARI F40 · live 3D model</div>
+            </div>
+          </div>
+          <!-- nameplate -->
+          <div style="position:absolute; bottom:46px; left:50%; transform:translateX(-50%); text-align:center;">
+            <div class="car-name" style="font-size:30px;">1987 &nbsp; FERRARI F40</div>
+            <div class="meta-sub" style="letter-spacing:0.14em; text-transform:uppercase; margin-top:4px; color:#777;">Maranello · Italy</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="hover-arrow right" title="Next car" onclick="go('manufacturer')">&rsaquo;</button>
+    </div>
+  </section>
+
+  <!-- ============================== 2 · GALLERY (dropdown) ============================== -->
+  <section class="frame" id="gallery">
+    <div class="frame-caption"><b>02 — Gallery Main.</b> Dropdown menu open · back arrow · central 3D viewer. <em style="color:#666;">(click ∨ to toggle)</em></div>
+    <div class="canvas-1440">
+      <button class="icon-btn" style="position:absolute; top:26px; left:40px; font-size:22px;" title="Back" onclick="go('home')">&lsaquo;</button>
+      <div style="display:flex; justify-content:center; padding-top:26px; position:relative;">
+        <button class="dropdown-trigger" id="ddTrigger" onclick="toggleDropdown()">
+          <span id="ddCaret">∨</span> Dropdown Menu
+        </button>
+        <div class="dropdown-panel" id="ddPanel">
+          <div class="label grey" style="margin-bottom:4px;">Navigate</div>
+          <div class="sidebar">
+            <div class="nav-item active">Explore Car Gallery</div>
+            <div class="nav-item">Travelling</div>
+            <div class="nav-item">Food / Cooking</div>
+            <div class="nav-item">Questions</div>
+          </div>
+        </div>
+      </div>
+      <div style="padding:0 56px; margin-top:18px;"><div class="rule"></div></div>
+
+      <div style="position:relative; height:660px; padding:40px 120px;">
+        <div style="height:100%; border:var(--hairline); position:relative;">
+          <div class="viewer-ph">
+            <div class="silhouette"></div><div class="floor"></div>
+            <div class="ph-cap">WebGL CANVAS — scrollable car model</div>
+          </div>
+        </div>
+        <button class="hover-arrow left" onclick="go('home')">&lsaquo;</button>
+        <button class="hover-arrow right" onclick="go('manufacturer')">&rsaquo;</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== 3 · MANUFACTURER SELECT ============================== -->
+  <section class="frame" id="manufacturer">
+    <div class="frame-caption"><b>03 — Manufacturer Select.</b> FM4-style · rotated label · history panel · emblem filmstrip. <em style="color:#666;">(click an emblem)</em></div>
+    <div class="canvas-1440" style="display:flex; flex-direction:column;">
+      <div class="vlabel"><span>Manufacturer Select</span></div>
+      <div style="flex:1; display:grid; grid-template-columns:1fr 360px; padding:46px 56px 0 96px; gap:40px;">
+        <!-- main -->
+        <div style="position:relative;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+            <div>
+              <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                <span class="flag flag-it" id="mfFlag"></span>
+                <span class="label grey" id="mfCountry">Italy</span>
+              </div>
+              <div class="car-name" style="font-size:var(--display); line-height:0.92;" id="mfName">FERRARI</div>
+            </div>
+            <!-- available badge -->
+            <div style="text-align:right;">
+              <div class="label red" style="font-size:10px;">Available</div>
+              <div style="font-family:var(--font-display); font-weight:700; font-size:46px; color:var(--accent-red); line-height:0.9;" id="mfCount">4</div>
+            </div>
+          </div>
+          <!-- empty glow space -->
+          <div style="margin-top:30px; height:330px; border:1px dashed #1f1f1f; position:relative;">
+            <div style="position:absolute; inset:0; background:radial-gradient(ellipse at 50% 70%, rgba(232,0,45,0.06) 0%, transparent 60%);"></div>
+            <div style="position:absolute; bottom:18px; left:0; right:0; text-align:center; font-family:var(--font-mono); font-size:11px; color:#3e3e3e;">brand silhouette / glow</div>
+          </div>
+        </div>
+        <!-- history panel -->
+        <div style="border-left:var(--hairline); padding-left:34px;">
+          <div class="label red" style="margin-bottom:14px;">Manufacturer History</div>
+          <p class="body-copy" id="mfHistory">Founded by Enzo Ferrari in 1939 and producing its first car in 1947, Ferrari is the definitive name in front-engined and mid-engined performance. Born from racing, every road car carries the discipline of the track — and the prancing horse remains the most coveted badge in motoring.</p>
+        </div>
+      </div>
+      <!-- strip -->
+      <div><div class="rule"></div>
+        <div class="emblem-strip" id="emblemStrip"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== 4 · CAR DETAIL (HERO) ============================== -->
+  <section class="frame" id="cardetail">
+    <div class="frame-caption"><b>04 — Individual Car · Hero.</b> FM4 car-select · FEATURED ribbon · class plate · stat bars · thumbnail filmstrip.</div>
+    <div class="canvas-1440" style="display:flex; flex-direction:column;">
+      <div class="vlabel"><span>Car Select</span></div>
+      <div style="flex:1; display:grid; grid-template-columns:1fr 340px; gap:36px; padding:40px 56px 0 96px;">
+        <!-- left: framed car -->
+        <div>
+          <div class="label red" style="margin-bottom:12px;">Car</div>
+          <div style="position:relative; height:470px; border:var(--hairline);">
+            <div class="ribbon">Featured</div>
+            <div class="viewer-ph">
+              <div class="silhouette"></div><div class="floor"></div>
+              <div class="ph-cap">WebGL CANVAS — McLAREN F1</div>
+            </div>
+          </div>
+        </div>
+        <!-- right: meta + stats -->
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+            <div>
+              <div class="meta-sub" style="letter-spacing:0.14em; text-transform:uppercase;">1992 · McLaren</div>
+              <div class="car-name" style="font-size:32px; margin-top:4px;">F1</div>
+            </div>
+            <div class="emblem-tile" style="width:58px; height:58px; cursor:default;">
+              <div class="logo" style="width:38px;height:38px;">MC</div>
+            </div>
+          </div>
+          <div style="margin:16px 0;"><span class="class-badge cb-s">S <span class="num">948</span></span>
+            <span class="meta-sub" style="margin-left:10px;">Class S · Hypercar</span></div>
+          <div class="rule" style="margin:18px 0;"></div>
+
+          <div class="stat"><div class="top"><span class="nm">Speed</span><span class="vl">9.4</span></div><div class="track"><div class="fill" style="--w:94%"></div></div></div>
+          <div class="stat"><div class="top"><span class="nm">Handling</span><span class="vl">8.1</span></div><div class="track"><div class="fill" style="--w:81%"></div></div></div>
+          <div class="stat"><div class="top"><span class="nm">Acceleration</span><span class="vl">9.0</span></div><div class="track"><div class="fill" style="--w:90%"></div></div></div>
+          <div class="stat"><div class="top"><span class="nm">Launch</span><span class="vl">7.6</span></div><div class="track"><div class="fill" style="--w:76%"></div></div></div>
+          <div class="stat"><div class="top"><span class="nm">Braking</span><span class="vl">8.4</span></div><div class="track"><div class="fill" style="--w:84%"></div></div></div>
+
+          <div style="margin-top:22px; text-align:right;">
+            <button class="dropdown-trigger" style="color:var(--accent-red);" onclick="go('scroll')">Full Profile ↓</button>
+          </div>
+        </div>
+      </div>
+      <!-- filmstrip -->
+      <div style="padding:0 56px 0 96px;"><div class="label grey" style="margin:14px 0 8px;">More McLaren</div></div>
+      <div style="padding:0 56px 16px 96px;">
+        <div class="filmstrip" id="carFilm"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== 5 · SCROLL DETAIL ============================== -->
+  <section class="frame" id="scroll">
+    <div class="frame-caption"><b>05 — Car Detail · Scroll Down.</b> Brand | Make header · two-column profile cards · editorial dark.</div>
+    <div class="canvas-1440 canvas-scroll">
+      <div style="padding:46px 80px 60px;">
+        <div class="label grey" style="margin-bottom:14px;">McLaren &nbsp;|&nbsp; F1</div>
+        <div class="rule" style="margin-bottom:36px;"></div>
+
+        <div class="profile-grid">
+          <div class="profile-card">
+            <div class="pic"><span class="cap">img — three-quarter front</span></div>
+            <div class="pad">
+              <div class="car-name" style="font-size:22px;">The Central Driving Position</div>
+              <p class="body-copy" style="margin-top:10px;">Gordon Murray placed the driver in the centre of the F1, flanked by two passenger seats set slightly back. The result is a cockpit that feels like a single-seat racer made road-legal — total symmetry, total focus, and a sightline no conventional supercar can match.</p>
+            </div>
+          </div>
+          <div class="profile-card">
+            <div class="pic"><span class="cap">img — gold-lined engine bay</span></div>
+            <div class="pad">
+              <div class="car-name" style="font-size:22px;">A Bay Lined in Gold</div>
+              <p class="body-copy" style="margin-top:10px;">The 6.1-litre BMW V12 sits beneath an engine bay lined with gold foil — chosen purely for its thermal reflectivity. It is the kind of no-compromise engineering decision that defines the car: function first, and the spectacle follows.</p>
+            </div>
+          </div>
+          <div class="profile-card">
+            <div class="pic"><span class="cap">img — carbon monocoque</span></div>
+            <div class="pad">
+              <div class="car-name" style="font-size:22px;">Carbon, Before It Was Common</div>
+              <p class="body-copy" style="margin-top:10px;">The F1 was the first production road car built around a full carbon-fibre monocoque. At a time when the material was reserved for Formula 1, it set a structural template the entire hypercar industry would spend the next thirty years catching up to.</p>
+            </div>
+          </div>
+          <div class="profile-card">
+            <div class="pic"><span class="cap">img — 1998 Le Mans livery</span></div>
+            <div class="pad">
+              <div class="car-name" style="font-size:22px;">240 mph, and a Le Mans Win</div>
+              <p class="body-copy" style="margin-top:10px;">A car never intended to race won Le Mans outright in 1995, and the road car held the production-car speed record for over a decade at 240.1 mph. Few machines have ever been so complete straight out of the box.</p>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:40px; text-align:center;">
+          <button class="dropdown-trigger" onclick="go('cardetail')" style="color:var(--text-secondary);">↑ Back to top</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== 6 · NAV MENU ============================== -->
+  <section class="frame" id="navmenu">
+    <div class="frame-caption"><b>06 — Navigation / Dropdown Menu.</b> Full-screen overlay · large links · red close indicator.</div>
+    <div class="canvas-1440">
+      <!-- dimmed home behind -->
+      <div style="position:absolute; inset:0; opacity:0.25; filter:blur(1px);">
+        <div class="viewer-ph"><div class="silhouette"></div><div class="floor"></div></div>
+      </div>
+      <div class="nav-overlay" style="position:absolute;">
+        <button class="close" title="Close" onclick="go('home')">— ×</button>
+        <div class="label red" style="margin-bottom:22px;">Menu</div>
+        <a onclick="go('home')">Gallery</a>
+        <a onclick="go('home')">Travel</a>
+        <a onclick="go('home')">Food</a>
+        <a onclick="go('home')">Outdoor</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== COMPONENT LIBRARY ============================== -->
+  <section class="frame" id="components">
+    <div class="frame-caption"><b>Component Library.</b> All 10 components in their states · token-driven.</div>
+    <div class="kit">
+
+      <div class="block">
+        <h2>NavTab</h2>
+        <div class="row" style="margin-top:14px;">
+          <button class="navtab active">Active</button>
+          <button class="navtab">Inactive</button>
+          <button class="navtab" style="color:var(--text-label);">Hover</button>
+        </div>
+        <div class="spec">Barlow Semi Condensed · 14px · 0.05em · active = #f0f0f0 + 2px #e8002d underline</div>
+      </div>
+
+      <div class="block">
+        <h2>SectionLabel</h2>
+        <div class="row" style="margin-top:14px;">
+          <span class="label red">Manufacturer History</span>
+          <span class="label grey">Sections</span>
+        </div>
+        <div class="spec">ALL CAPS · 11px · letter-spacing 0.18em · red (#e8002d) or grey (#8a8a8a)</div>
+      </div>
+
+      <div class="block">
+        <h2>ClassBadge</h2>
+        <div class="row" style="margin-top:14px;">
+          <span class="class-badge cb-s">S <span class="num">948</span></span>
+          <span class="class-badge cb-a">A <span class="num">781</span></span>
+          <span class="class-badge cb-b">B <span class="num">481</span></span>
+          <span class="class-badge cb-c">C <span class="num">383</span></span>
+          <span class="class-badge cb-d">D <span class="num">240</span></span>
+        </div>
+        <div class="spec">Space Mono bold · licence-plate rectangle · S red · A orange · B yellow · C green · D blue</div>
+      </div>
+
+      <div class="block">
+        <h2>StatBar</h2>
+        <div style="max-width:360px; margin-top:14px;">
+          <div class="stat"><div class="top"><span class="nm">Speed</span><span class="vl">9.4</span></div><div class="track"><div class="fill" style="width:94%"></div></div></div>
+          <div class="stat"><div class="top"><span class="nm">Handling</span><span class="vl">6.0</span></div><div class="track"><div class="fill" style="width:60%"></div></div></div>
+          <div class="stat"><div class="top"><span class="nm">Braking</span><span class="vl">3.2</span></div><div class="track"><div class="fill" style="width:32%"></div></div></div>
+        </div>
+        <div class="spec">label 11px tracked · value Space Mono · track #3a3a3a · fill #e8002d</div>
+      </div>
+
+      <div class="block">
+        <h2>EmblemTile</h2>
+        <div class="row" style="margin-top:14px;">
+          <div class="emblem-tile selected"><div class="logo">FE</div><span class="nm">Ferrari</span></div>
+          <div class="emblem-tile"><div class="logo">PO</div><span class="nm">Porsche</span></div>
+          <div class="emblem-tile"><div class="logo">MC</div><span class="nm">McLaren</span></div>
+        </div>
+        <div class="spec">92×92 · selected = #ededed bg + dark text · unselected = #1a1a1a + #2e2e2e border</div>
+      </div>
+
+      <div class="block">
+        <h2>CarThumbnailCard</h2>
+        <div class="filmstrip" style="margin-top:14px;">
+          <div class="thumb-card active"><div class="pic"></div><div class="info"><div class="mk">McLaren</div><div class="md">F1</div></div></div>
+          <div class="thumb-card"><div class="pic"></div><div class="info"><div class="mk">McLaren</div><div class="md">P1</div></div></div>
+          <div class="thumb-card"><div class="pic"></div><div class="info"><div class="mk">McLaren</div><div class="md">765LT</div></div></div>
+        </div>
+        <div class="spec">150 wide · active = #e8002d border · hover = #555 border + elevated bg</div>
+      </div>
+
+      <div class="block">
+        <h2>CarProfileCard</h2>
+        <div style="max-width:420px; margin-top:14px;">
+          <div class="profile-card">
+            <div class="pic"><span class="cap">img placeholder</span></div>
+            <div class="pad"><div class="car-name" style="font-size:20px;">The Central Driving Position</div>
+              <p class="body-copy" style="margin-top:8px;">Body description paragraph in small light grey, line-height 1.6 — editorial dark magazine feel.</p></div>
+          </div>
+        </div>
+        <div class="spec">surface #1a1a1a · 1px #2e2e2e border · image 200h · title Barlow SC · body 13px #8a8a8a</div>
+      </div>
+
+      <div class="block">
+        <h2>HoverArrow</h2>
+        <div class="row" style="margin-top:14px; position:relative; height:120px; background:#0d0d0d; border:var(--hairline);">
+          <button class="hover-arrow left">&lsaquo;</button>
+          <button class="hover-arrow right">&rsaquo;</button>
+          <span class="spec" style="margin:auto;">hover to reveal red edge wash</span>
+        </div>
+        <div class="spec">edge affordance · grey → white on hover · subtle red gradient wash</div>
+      </div>
+
+      <div class="block">
+        <h2>VerticalRotatedLabel</h2>
+        <div style="position:relative; height:120px; border:var(--hairline); margin-top:14px;">
+          <div class="vlabel"><span>Manufacturer Select</span></div>
+          <span class="spec" style="position:absolute; left:80px; top:50px;">vertical-rl · 0.42em tracking · #c0c0c0 · far-left edge</span>
+        </div>
+      </div>
+
+      <div class="block">
+        <h2>DividerRule</h2>
+        <div class="rule" style="margin-top:16px;"></div>
+        <div class="spec">1px solid #2e2e2e · used liberally to section content (key Forza signature)</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================== RESPONSIVE ============================== -->
+  <section class="frame" id="responsive">
+    <div class="frame-caption"><b>Responsive variants.</b> Screens 1, 3 &amp; 4 at tablet (768) &amp; mobile (390).</div>
+    <div style="width:1440px; max-width:1440px;">
+
+      <div class="label grey" style="margin:6px 0 16px;">Screen 1 — Home</div>
+      <div class="resp-row">
+        <div class="device"><span class="dlabel">Tablet · 768</span>
+          <div class="screen tablet">
+            <div style="display:flex;justify-content:space-between;padding:18px 24px;"><div class="navtabs" style="gap:18px;"><button class="navtab active" style="font-size:12px;">Gallery</button><button class="navtab" style="font-size:12px;">Travel</button><button class="navtab" style="font-size:12px;">Food</button><button class="navtab" style="font-size:12px;">Outdoor</button></div><button class="icon-btn">≡</button></div>
+            <div class="rule"></div>
+            <div style="padding:20px 24px; height:440px;"><div style="height:100%;border:var(--hairline);"><div class="viewer-ph"><div class="silhouette"></div><div class="floor"></div><div class="ph-cap">3D — Ferrari F40</div></div></div></div>
+          </div>
+        </div>
+        <div class="device"><span class="dlabel">Mobile · 390</span>
+          <div class="screen mobile">
+            <div style="display:flex;justify-content:space-between;padding:16px 18px;align-items:center;"><span style="font-size:11px;color:#fff;font-family:var(--font-display);letter-spacing:0.16em;">GALLERY</span><button class="icon-btn">≡</button></div>
+            <div class="rule"></div>
+            <div style="padding:16px;height:420px;"><div style="height:100%;border:var(--hairline);"><div class="viewer-ph"><div class="silhouette"></div><div class="floor"></div><div class="ph-cap">3D — F40</div></div></div></div>
+            <div class="rule"></div>
+            <div style="padding:14px 18px;"><div class="car-name" style="font-size:22px;">FERRARI F40</div><div class="meta-sub">1987 · Italy</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule" style="margin:34px 0;"></div>
+      <div class="label grey" style="margin:6px 0 16px;">Screen 3 — Manufacturer Select &nbsp;·&nbsp; Screen 4 — Car Detail</div>
+      <div class="resp-row">
+        <div class="device"><span class="dlabel">Manufacturer · Mobile 390</span>
+          <div class="screen mobile">
+            <div style="padding:18px;">
+              <div style="display:flex;align-items:center;gap:8px;"><span class="flag flag-it"></span><span class="label grey">Italy</span></div>
+              <div class="car-name" style="font-size:40px;margin-top:6px;">FERRARI</div>
+              <div class="label red" style="margin-top:6px;">Available <span style="font-family:var(--font-display);font-size:24px;">4</span></div>
+            </div>
+            <div style="margin:0 18px;height:230px;border:1px dashed #1f1f1f;"></div>
+            <div class="rule" style="margin-top:18px;"></div>
+            <div style="display:flex;gap:8px;overflow:hidden;padding:14px 18px;">
+              <div class="emblem-tile selected" style="width:70px;height:70px;"><div class="logo" style="width:28px;height:28px;font-size:11px;">FE</div><span class="nm">Ferrari</span></div>
+              <div class="emblem-tile" style="width:70px;height:70px;"><div class="logo" style="width:28px;height:28px;font-size:11px;">PO</div><span class="nm">Porsche</span></div>
+              <div class="emblem-tile" style="width:70px;height:70px;"><div class="logo" style="width:28px;height:28px;font-size:11px;">MC</div><span class="nm">McLaren</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="device"><span class="dlabel">Car Detail · Tablet 768</span>
+          <div class="screen tablet">
+            <div style="padding:18px 24px;">
+              <div class="label red">Car</div>
+              <div style="display:grid;grid-template-columns:1fr 220px;gap:18px;margin-top:10px;">
+                <div style="height:300px;border:var(--hairline);position:relative;"><div class="ribbon" style="font-size:8px;padding:4px 30px;left:-28px;top:12px;">Featured</div><div class="viewer-ph"><div class="silhouette"></div><div class="floor"></div><div class="ph-cap">3D — McLaren F1</div></div></div>
+                <div>
+                  <div class="meta-sub" style="text-transform:uppercase;letter-spacing:0.14em;">1992 · McLaren</div>
+                  <div class="car-name" style="font-size:26px;">F1</div>
+                  <div style="margin:10px 0;"><span class="class-badge cb-s">S <span class="num">948</span></span></div>
+                  <div class="stat"><div class="top"><span class="nm">Speed</span><span class="vl">9.4</span></div><div class="track"><div class="fill" style="width:94%"></div></div></div>
+                  <div class="stat"><div class="top"><span class="nm">Handling</span><span class="vl">8.1</span></div><div class="track"><div class="fill" style="width:81%"></div></div></div>
+                  <div class="stat"><div class="top"><span class="nm">Accel</span><span class="vl">9.0</span></div><div class="track"><div class="fill" style="width:90%"></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================== FLOW ============================== -->
+  <section class="frame" id="flow">
+    <div class="frame-caption"><b>Navigation flow.</b> Home → Gallery Main → Manufacturer Select → Individual Car → Scroll-down Detail. <em style="color:#666;">(click a node to jump)</em></div>
+    <div class="flow">
+      <div class="node" onclick="go('home')"><div class="step">01</div><div class="nm">Home</div><div class="mini"></div></div>
+      <span class="arrow">›</span>
+      <div class="node" onclick="go('gallery')"><div class="step">02</div><div class="nm">Gallery</div><div class="mini"></div></div>
+      <span class="arrow">›</span>
+      <div class="node" onclick="go('manufacturer')"><div class="step">03</div><div class="nm">Manufacturer</div><div class="mini"></div></div>
+      <span class="arrow">›</span>
+      <div class="node" onclick="go('cardetail')"><div class="step">04</div><div class="nm">Car Detail</div><div class="mini"></div></div>
+      <span class="arrow">›</span>
+      <div class="node" onclick="go('scroll')"><div class="step">05</div><div class="nm">Scroll Detail</div><div class="mini"></div></div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  // ---- screen switching ----
+  function go(id) {
+    document.querySelectorAll('.frame').forEach(f => f.classList.toggle('active', f.id === id));
+    document.querySelectorAll('.switcher button').forEach(b => b.classList.toggle('active', b.dataset.go === id));
+    window.scrollTo({ top: 0 });
+    if (id !== 'gallery') closeDropdown();
+  }
+  document.querySelectorAll('.switcher button').forEach(b => b.addEventListener('click', () => go(b.dataset.go)));
+
+  // ---- gallery dropdown ----
+  function toggleDropdown() { document.getElementById('ddPanel').classList.toggle('open'); flipCaret(); }
+  function closeDropdown() { var p = document.getElementById('ddPanel'); if (p) { p.classList.remove('open'); flipCaret(); } }
+  function flipCaret() {
+    var open = document.getElementById('ddPanel').classList.contains('open');
+    document.getElementById('ddCaret').textContent = open ? '∧' : '∨';
+  }
+
+  // ---- manufacturer data + emblem strip ----
+  const MAKES = [
+    { code:'FE', nm:'Ferrari',   country:'Italy',   flag:'flag-it', count:4, hist:'Founded by Enzo Ferrari in 1939 and producing its first car in 1947, Ferrari is the definitive name in front- and mid-engined performance. Born from racing, every road car carries the discipline of the track — and the prancing horse remains the most coveted badge in motoring.' },
+    { code:'PO', nm:'Porsche',   country:'Germany', flag:'flag-de', count:3, hist:'From the 356 of 1948 to the endlessly refined 911, Porsche has built its identity on evolution rather than reinvention. Rear-engined, obsessively engineered, and equally at home on the road and at Le Mans, it is the enthusiast’s benchmark for usable performance.' },
+    { code:'MC', nm:'McLaren',   country:'UK',      flag:'flag-gb', count:5, hist:'A Formula 1 team first and a road-car maker second, McLaren brought race-bred carbon construction to the street with the 1992 F1. Every car since has chased the same ideal: the lightest, purest, most driver-focused machine the rules will allow.' },
+    { code:'NI', nm:'Nissan',    country:'Japan',   flag:'flag-jp', count:2, hist:'Through the Skyline GT-R lineage, Nissan turned engineering ambition into legend. Twin-turbo straight-sixes, advanced all-wheel drive, and giant-killing track records earned the GT-R its “Godzilla” nickname across three decades of JDM dominance.' },
+    { code:'HO', nm:'Honda',     country:'Japan',   flag:'flag-jp', count:2, hist:'Honda built the NSX to prove a supercar could be reliable, lightweight, and usable every day. Developed with input from Ayrton Senna, its all-aluminium monocoque and high-revving V6 rewrote expectations for what an everyday exotic could be.' },
+    { code:'TO', nm:'Toyota',    country:'Japan',   flag:'flag-jp', count:3, hist:'The A80 Supra’s 2JZ inline-six became one of the most over-engineered, tuner-beloved engines ever made. Toyota’s flagship coupe paired genuine grand-touring comfort with a near-limitless appetite for power.' },
+    { code:'CH', nm:'Chevrolet', country:'USA',     flag:'flag-us', count:3, hist:'From small-block V8 muscle to the mid-engined revolution of the C8 Corvette, Chevrolet has delivered accessible performance for seven decades — proof that the supercar experience need not carry a European badge.' },
+    { code:'KO', nm:'Koenigsegg',country:'Sweden',  flag:'flag-se', count:1, hist:'A small Swedish workshop with outsized ambition, Koenigsegg engineers nearly every component in-house — from the dihedral synchro-helix doors to its own transmissions — relentlessly chasing the absolute limits of speed and innovation.' },
+  ];
+  const strip = document.getElementById('emblemStrip');
+  MAKES.forEach((m, i) => {
+    const t = document.createElement('div');
+    t.className = 'emblem-tile' + (i === 0 ? ' selected' : '');
+    t.innerHTML = '<div class="logo">' + m.code + '</div><span class="nm">' + m.nm + '</span>';
+    t.addEventListener('click', () => selectMake(i));
+    strip.appendChild(t);
+  });
+  function selectMake(i) {
+    const m = MAKES[i];
+    document.querySelectorAll('#emblemStrip .emblem-tile').forEach((t, j) => t.classList.toggle('selected', j === i));
+    document.getElementById('mfName').textContent = m.nm.toUpperCase();
+    document.getElementById('mfCountry').textContent = m.country;
+    document.getElementById('mfCount').textContent = m.count;
+    document.getElementById('mfHistory').textContent = m.hist;
+    document.getElementById('mfFlag').className = 'flag ' + m.flag;
+  }
+
+  // ---- car detail filmstrip ----
+  const MCLARENS = [['McLaren','F1',true],['McLaren','P1',false],['McLaren','720S',false],['McLaren','765LT',false],['McLaren','Senna',false],['McLaren','Artura',false]];
+  const film = document.getElementById('carFilm');
+  MCLARENS.forEach(([mk, md, active]) => {
+    const c = document.createElement('div');
+    c.className = 'thumb-card' + (active ? ' active' : '');
+    c.innerHTML = '<div class="pic"></div><div class="info"><div class="mk">' + mk + '</div><div class="md">' + md + '</div></div>';
+    c.addEventListener('click', () => {
+      document.querySelectorAll('#carFilm .thumb-card').forEach(x => x.classList.remove('active'));
+      c.classList.add('active');
+    });
+    film.appendChild(c);
+  });
+</script>
+</body>
+</html>
