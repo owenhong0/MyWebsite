@@ -1,0 +1,347 @@
+{
+  ".claude/launch.json": {
+    "mtime": 1781403835.033819,
+    "ast_hash": "d0027bdfb2b6d5029e71628274de4a34",
+    "semantic_hash": "d0027bdfb2b6d5029e71628274de4a34"
+  },
+  "backend/alembic/env.py": {
+    "mtime": 1781403000.1688097,
+    "ast_hash": "1ddb4a31234615fa7c6b622cb10cbf9c",
+    "semantic_hash": "1ddb4a31234615fa7c6b622cb10cbf9c"
+  },
+  "backend/alembic/versions/110f92b7a4a8_create_users_table.py": {
+    "mtime": 1781403000.1689813,
+    "ast_hash": "074022a25f5856b4bc4ff7b958524f32",
+    "semantic_hash": "074022a25f5856b4bc4ff7b958524f32"
+  },
+  "backend/alembic/versions/3261bc1af5dd_create_users_table_fixed.py": {
+    "mtime": 1781403000.1690521,
+    "ast_hash": "6b90b1b363e50572b01be5a8e0afe2c1",
+    "semantic_hash": "6b90b1b363e50572b01be5a8e0afe2c1"
+  },
+  "backend/app/__init__.py": {
+    "mtime": 1781403000.1691296,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "backend/app/crud.py": {
+    "mtime": 1781403000.1692073,
+    "ast_hash": "063f8a15a0860fb91637e4c5b4073374",
+    "semantic_hash": "063f8a15a0860fb91637e4c5b4073374"
+  },
+  "backend/app/database.py": {
+    "mtime": 1781403000.1692724,
+    "ast_hash": "cf4508e63babc259399c01668ebec105",
+    "semantic_hash": "cf4508e63babc259399c01668ebec105"
+  },
+  "backend/app/main.py": {
+    "mtime": 1781403000.1693506,
+    "ast_hash": "6e70003f7f4dc23275500ac2547b7005",
+    "semantic_hash": "6e70003f7f4dc23275500ac2547b7005"
+  },
+  "backend/app/models.py": {
+    "mtime": 1781403000.1694252,
+    "ast_hash": "17238cbcdcf3534ee21d3b7224b1ca3b",
+    "semantic_hash": "17238cbcdcf3534ee21d3b7224b1ca3b"
+  },
+  "backend/app/s3_config.py": {
+    "mtime": 1781403000.1695006,
+    "ast_hash": "6fcdeeb8624fde32befb405c120f392b",
+    "semantic_hash": "6fcdeeb8624fde32befb405c120f392b"
+  },
+  "backend/app/schemas.py": {
+    "mtime": 1781403000.1695712,
+    "ast_hash": "57e8a5a2b38b463b3368bae89296d3ee",
+    "semantic_hash": "57e8a5a2b38b463b3368bae89296d3ee"
+  },
+  "backend/app/uuid.py": {
+    "mtime": 1781403000.1696448,
+    "ast_hash": "90bf21a7a0f0191ce8a519770a523d9a",
+    "semantic_hash": "90bf21a7a0f0191ce8a519770a523d9a"
+  },
+  "backend/pyproject.toml": {
+    "mtime": 1781403000.1697783,
+    "ast_hash": "a2095f577e4176fa256d810fbdcf8321",
+    "semantic_hash": "a2095f577e4176fa256d810fbdcf8321"
+  },
+  "backend/tests/__init__.py": {
+    "mtime": 1781403000.1699116,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "backend/tests/conftest.py": {
+    "mtime": 1781403000.1699939,
+    "ast_hash": "f2675162f3f47e21979581c19aa08da4",
+    "semantic_hash": "f2675162f3f47e21979581c19aa08da4"
+  },
+  "backend/tests/fixtures/sample_data.py": {
+    "mtime": 1781403000.170104,
+    "ast_hash": "b77ec77aa2a0db340539937ed1271504",
+    "semantic_hash": "b77ec77aa2a0db340539937ed1271504"
+  },
+  "backend/tests/test_models.py": {
+    "mtime": 1781403000.17018,
+    "ast_hash": "23f9a6edf24a9733b0094c611d26acb1",
+    "semantic_hash": "23f9a6edf24a9733b0094c611d26acb1"
+  },
+  "frontend/package.json": {
+    "mtime": 1782401019.8231795,
+    "ast_hash": "2a9430a5510d695d011e04459256929f",
+    "semantic_hash": "2a9430a5510d695d011e04459256929f"
+  },
+  "frontend/public/manifest.json": {
+    "mtime": 1781403000.1795106,
+    "ast_hash": "d9d975cebe2ec20b6c652e1e4c12ccf0",
+    "semantic_hash": "d9d975cebe2ec20b6c652e1e4c12ccf0"
+  },
+  "frontend/src/App.test.tsx": {
+    "mtime": 1781403000.2595005,
+    "ast_hash": "3258d962552b258f9162a9e094ab9e6e",
+    "semantic_hash": "3258d962552b258f9162a9e094ab9e6e"
+  },
+  "frontend/src/App.tsx": {
+    "mtime": 1781403000.2595751,
+    "ast_hash": "1ac906820b7ab3d1b43426a4c1757dc3",
+    "semantic_hash": "1ac906820b7ab3d1b43426a4c1757dc3"
+  },
+  "frontend/src/api/apis.ts": {
+    "mtime": 1781403000.2596788,
+    "ast_hash": "33fa8c03b4bc3cc474b6fcab78a6fbe3",
+    "semantic_hash": "33fa8c03b4bc3cc474b6fcab78a6fbe3"
+  },
+  "frontend/src/api/types.ts": {
+    "mtime": 1781403000.2597435,
+    "ast_hash": "3caca0f6bb5ce58f8eba769b27efa29f",
+    "semantic_hash": "3caca0f6bb5ce58f8eba769b27efa29f"
+  },
+  "frontend/src/components/CarGallery/BrandSelectionMenu.tsx": {
+    "mtime": 1781403000.2598934,
+    "ast_hash": "e0419e1198e739a6c0a5dedede7fb680",
+    "semantic_hash": "e0419e1198e739a6c0a5dedede7fb680"
+  },
+  "frontend/src/components/CarGallery/Car3DBackgroundPage.tsx": {
+    "mtime": 1781403000.2599971,
+    "ast_hash": "96a2cdfcd0f193438bb65547f1da7279",
+    "semantic_hash": "96a2cdfcd0f193438bb65547f1da7279"
+  },
+  "frontend/src/components/CarGallery/CarModel.tsx": {
+    "mtime": 1781403000.2600713,
+    "ast_hash": "8245a6649d77fb99b8aa22894a11e9ed",
+    "semantic_hash": "8245a6649d77fb99b8aa22894a11e9ed"
+  },
+  "frontend/src/components/CarGallery/CarThumbnail.tsx": {
+    "mtime": 1781403000.2601478,
+    "ast_hash": "9f91b995feb8399f044ec3162b5ffd01",
+    "semantic_hash": "9f91b995feb8399f044ec3162b5ffd01"
+  },
+  "frontend/src/components/CarGallery/Garage.tsx": {
+    "mtime": 1781403000.2602165,
+    "ast_hash": "51234e003d589e688ee70f1b0b8bebec",
+    "semantic_hash": "51234e003d589e688ee70f1b0b8bebec"
+  },
+  "frontend/src/components/CarGallery/MainMenu.tsx": {
+    "mtime": 1781403000.2602825,
+    "ast_hash": "0d79d2b5a8620adbcb754ec7bbaf7a01",
+    "semantic_hash": "0d79d2b5a8620adbcb754ec7bbaf7a01"
+  },
+  "frontend/src/components/CarGallery/cars.config.ts": {
+    "mtime": 1781403835.0415184,
+    "ast_hash": "1656baae6e34af24145a26fe2ecef1ac",
+    "semantic_hash": "1656baae6e34af24145a26fe2ecef1ac"
+  },
+  "frontend/src/components/LocaleMainPage.tsx": {
+    "mtime": 1781403000.2604527,
+    "ast_hash": "f925582974957b5a93ea1b8c6b2da358",
+    "semantic_hash": "f925582974957b5a93ea1b8c6b2da358"
+  },
+  "frontend/src/components/MultiActionAreaCard.tsx": {
+    "mtime": 1781403000.260524,
+    "ast_hash": "5301f89f2610d5461d7bd0535fbf5fa0",
+    "semantic_hash": "5301f89f2610d5461d7bd0535fbf5fa0"
+  },
+  "frontend/src/components/PeaksMainPage.tsx": {
+    "mtime": 1781403000.26059,
+    "ast_hash": "fb5c9852d45699566621e3c2a8a065cf",
+    "semantic_hash": "fb5c9852d45699566621e3c2a8a065cf"
+  },
+  "frontend/src/components/PlateDetail.tsx": {
+    "mtime": 1781403000.2606552,
+    "ast_hash": "f68a428d6cc64470aca2ee2ef54cbafd",
+    "semantic_hash": "f68a428d6cc64470aca2ee2ef54cbafd"
+  },
+  "frontend/src/components/PlatesMainPage.tsx": {
+    "mtime": 1781403000.2607265,
+    "ast_hash": "cf9d8571d2cbc43ded7cad9cb7672173",
+    "semantic_hash": "cf9d8571d2cbc43ded7cad9cb7672173"
+  },
+  "frontend/src/components/PlatesTable.tsx": {
+    "mtime": 1781403000.2607894,
+    "ast_hash": "0bc85867d1992453ae73732034918e13",
+    "semantic_hash": "0bc85867d1992453ae73732034918e13"
+  },
+  "frontend/src/components/ScrollContainer.tsx": {
+    "mtime": 1781403000.260859,
+    "ast_hash": "9f228735e33044adfd04627a69d3c18c",
+    "semantic_hash": "9f228735e33044adfd04627a69d3c18c"
+  },
+  "frontend/src/components/SelectActionCard.tsx": {
+    "mtime": 1781403000.260922,
+    "ast_hash": "cfcb705a1766abbe5e47b8167986a031",
+    "semantic_hash": "cfcb705a1766abbe5e47b8167986a031"
+  },
+  "frontend/src/components/SimpleMap.tsx": {
+    "mtime": 1781403000.260986,
+    "ast_hash": "898f76557f35eb42f7b62f75f5fee96d",
+    "semantic_hash": "898f76557f35eb42f7b62f75f5fee96d"
+  },
+  "frontend/src/components/UserForm.tsx": {
+    "mtime": 1781403000.261057,
+    "ast_hash": "9cf045129659fc53987fd22dcaa155ea",
+    "semantic_hash": "9cf045129659fc53987fd22dcaa155ea"
+  },
+  "frontend/src/components/common/DropdownNav.tsx": {
+    "mtime": 1781403000.2611604,
+    "ast_hash": "88403a417f7dcdbae72bd10a2e71acb8",
+    "semantic_hash": "88403a417f7dcdbae72bd10a2e71acb8"
+  },
+  "frontend/src/index.tsx": {
+    "mtime": 1781403000.2612915,
+    "ast_hash": "cbd01eedd718cf6aab8c0d90be193c68",
+    "semantic_hash": "cbd01eedd718cf6aab8c0d90be193c68"
+  },
+  "frontend/src/models/CarModels.ts": {
+    "mtime": 1781403000.2614615,
+    "ast_hash": "b25cae3949ff8f5c1621abc245cc7669",
+    "semantic_hash": "b25cae3949ff8f5c1621abc245cc7669"
+  },
+  "frontend/src/models/Plate.ts": {
+    "mtime": 1781403000.2615218,
+    "ast_hash": "439b196ddc2a418bbd7ba43162317ba0",
+    "semantic_hash": "439b196ddc2a418bbd7ba43162317ba0"
+  },
+  "frontend/src/pages/IndividualCarPage.tsx": {
+    "mtime": 1781403835.041744,
+    "ast_hash": "7acba47f0b4b7ce169a95b2c4f950ba7",
+    "semantic_hash": "7acba47f0b4b7ce169a95b2c4f950ba7"
+  },
+  "frontend/src/pages/MakeSelectionPage.tsx": {
+    "mtime": 1781403835.0420086,
+    "ast_hash": "4ea8b49abc33b5ae2ede06566818f5f5",
+    "semantic_hash": "4ea8b49abc33b5ae2ede06566818f5f5"
+  },
+  "frontend/src/pages/TravelPage.tsx": {
+    "mtime": 1781403000.2618217,
+    "ast_hash": "1dedde0f3babbfc239c3077a7e433609",
+    "semantic_hash": "1dedde0f3babbfc239c3077a7e433609"
+  },
+  "frontend/src/react-app-env.d.ts": {
+    "mtime": 1781403000.261882,
+    "ast_hash": "3b12a2a445e35988cd2eb9f73d12c500",
+    "semantic_hash": "3b12a2a445e35988cd2eb9f73d12c500"
+  },
+  "frontend/src/reportWebVitals.ts": {
+    "mtime": 1781403000.261949,
+    "ast_hash": "f62c07c24a14ca699e74938f358baf22",
+    "semantic_hash": "f62c07c24a14ca699e74938f358baf22"
+  },
+  "frontend/src/setupTests.ts": {
+    "mtime": 1781403000.2620203,
+    "ast_hash": "1a77571e1a8cf36018a41bcedf60db75",
+    "semantic_hash": "1a77571e1a8cf36018a41bcedf60db75"
+  },
+  "frontend/src/views/Homepage.tsx": {
+    "mtime": 1781403000.2633848,
+    "ast_hash": "802ec3b0cb8c9138d0e460a4b504cb11",
+    "semantic_hash": "802ec3b0cb8c9138d0e460a4b504cb11"
+  },
+  "frontend/tsconfig.json": {
+    "mtime": 1781403000.26345,
+    "ast_hash": "75a54e1abd560b1af0f3f2205a7c90df",
+    "semantic_hash": "75a54e1abd560b1af0f3f2205a7c90df"
+  },
+  "README.md": {
+    "mtime": 1781403000.1685135,
+    "ast_hash": "75f75e4a3c77c98778b038567309451f",
+    "semantic_hash": "75f75e4a3c77c98778b038567309451f"
+  },
+  "backend/docker-compose.yml": {
+    "mtime": 1781403000.1697185,
+    "ast_hash": "958ef8a81c7a0ebe7a1c06acd0ad4637",
+    "semantic_hash": "958ef8a81c7a0ebe7a1c06acd0ad4637"
+  },
+  "backend/requirements.txt": {
+    "mtime": 1781403000.1698372,
+    "ast_hash": "c51aa863b8601a692018602adfc0e79f",
+    "semantic_hash": "c51aa863b8601a692018602adfc0e79f"
+  },
+  "frontend/README.md": {
+    "mtime": 1781403000.1704628,
+    "ast_hash": "86383a836e7b0e5da6a44f05e17db606",
+    "semantic_hash": "86383a836e7b0e5da6a44f05e17db606"
+  },
+  "frontend/public/index.html": {
+    "mtime": 1781403000.1792114,
+    "ast_hash": "ef8a02db437c74f2ecb0d88becc4b9d4",
+    "semantic_hash": "ef8a02db437c74f2ecb0d88becc4b9d4"
+  },
+  "frontend/public/robots.txt": {
+    "mtime": 1781403000.2593122,
+    "ast_hash": "fa1ded1ed7c11438a9b0385b1e112850",
+    "semantic_hash": "fa1ded1ed7c11438a9b0385b1e112850"
+  },
+  "frontend/public/images/cars/honda-nsx-r.jpg": {
+    "mtime": 1781403835.0358908,
+    "ast_hash": "2b77192f95c12fad581c5587ea3c3927",
+    "semantic_hash": "2b77192f95c12fad581c5587ea3c3927"
+  },
+  "frontend/public/images/cars/koenigsegg-ccxr.jpg": {
+    "mtime": 1781403835.0371206,
+    "ast_hash": "829d5b2f205f33982c8421aa960c14b1",
+    "semantic_hash": "829d5b2f205f33982c8421aa960c14b1"
+  },
+  "frontend/public/images/cars/mclaren-f1.jpg": {
+    "mtime": 1781403835.0379832,
+    "ast_hash": "d8fb80649c716f8ed1cc460f55cdb6d0",
+    "semantic_hash": "d8fb80649c716f8ed1cc460f55cdb6d0"
+  },
+  "frontend/public/images/cars/nissan-skyline-r33.jpg": {
+    "mtime": 1781403835.0397437,
+    "ast_hash": "72cbf8d5bbe02ec2e992a953cf7d7ecb",
+    "semantic_hash": "72cbf8d5bbe02ec2e992a953cf7d7ecb"
+  },
+  "frontend/public/images/cars/porsche-gt3rs.jpg": {
+    "mtime": 1781403000.1773672,
+    "ast_hash": "2bce88a1651ad2aa71e139dea4728273",
+    "semantic_hash": "2bce88a1651ad2aa71e139dea4728273"
+  },
+  "frontend/public/images/cars/toyota-supra-rz.jpg": {
+    "mtime": 1781403835.0411556,
+    "ast_hash": "977182142ba279140e315d396dce3afc",
+    "semantic_hash": "977182142ba279140e315d396dce3afc"
+  },
+  "frontend/public/logo192.png": {
+    "mtime": 1781403000.1793005,
+    "ast_hash": "33dbdd0177549353eeeb785d02c294af",
+    "semantic_hash": "33dbdd0177549353eeeb785d02c294af"
+  },
+  "frontend/public/logo512.png": {
+    "mtime": 1781403000.1794138,
+    "ast_hash": "917515db74ea8d1aee6a246cfbcc0b45",
+    "semantic_hash": "917515db74ea8d1aee6a246cfbcc0b45"
+  },
+  "frontend/public/peaks/sequoia.jpeg": {
+    "mtime": 1781403000.2592258,
+    "ast_hash": "d5eeb5d4054be8c89781798d314044c6",
+    "semantic_hash": "d5eeb5d4054be8c89781798d314044c6"
+  },
+  "frontend/src/logo.svg": {
+    "mtime": 1781403000.2613611,
+    "ast_hash": "06e733283fa43d1dd57738cfc409adbd",
+    "semantic_hash": "06e733283fa43d1dd57738cfc409adbd"
+  },
+  "frontend/src/static/images/card.png": {
+    "mtime": 1781403000.2632625,
+    "ast_hash": "2b47eab061566e950589888160e9c718",
+    "semantic_hash": "2b47eab061566e950589888160e9c718"
+  }
+}
